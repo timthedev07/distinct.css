@@ -6,7 +6,7 @@
   "bin": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node src/index.ts"
+    "start": "sh start.sh"
   },
   "repository": {
     "type": "git",
