@@ -4,17 +4,18 @@ import { join } from "path";
 import strip from "strip-comments";
 import { CYAN, RED, RESET, YELLOW } from "./index";
 
-interface Property {
+export interface Property {
   property: string;
   value: string;
+  position: PositionInfo;
 }
 
-interface Ruleset {
+interface RuleSet {
   selectors: Array<string>;
   rules: Array<Property>;
 }
 
-interface PositionInfo {
+export interface PositionInfo {
   start?: Position | undefined;
   end?: Position | undefined;
   source?: string | undefined;
@@ -52,14 +53,14 @@ const readCss = (path: string) => {
   }
 };
 
-export const cssParser: (filePath: string) => Array<Ruleset> | null = (
+export const cssParser: (filePath: string) => Array<RuleSet> | null = (
   filePath: string
 ) => {
   const input = readCss(filePath);
 
   const source = join(__dirname, filePath);
 
-  if (!input) {
+  if (input === null) {
     console.error(`No such file or directory: ${RED}${source}${RESET}`);
     return null;
   }
@@ -69,11 +70,11 @@ export const cssParser: (filePath: string) => Array<Ruleset> | null = (
   const rules: [Rule] = parse(commentsRemoved, { silent: true, source })
     .stylesheet?.rules as [Rule];
 
-  if (!rules) {
+  if (!rules || !rules.length) {
     return null;
   }
 
-  const res: Array<Ruleset> = [];
+  const res: Array<RuleSet> = [];
 
   rules.forEach((each) => {
     if (!each.selectors || !each.selectors.length) return;
@@ -92,6 +93,7 @@ export const cssParser: (filePath: string) => Array<Ruleset> | null = (
         return {
           property,
           value,
+          position: position!,
         };
       }),
     });
