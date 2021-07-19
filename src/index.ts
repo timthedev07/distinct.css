@@ -1,5 +1,6 @@
-import { lstatSync, promises } from "fs";
+import { lstatSync } from "fs";
 import yargs from "yargs";
+import { checkDir, checkFile } from "./check";
 
 const parser = yargs(process.argv.slice(2))
   .options({
@@ -25,8 +26,10 @@ const parser = yargs(process.argv.slice(2))
   .alias("h", "help");
 
 export const CYAN = "\x1b[36m";
-export const RESET = "\x1b[0m";
 export const RED = "\x1b[31m";
+export const YELLOW = "\x1b[33m";
+export const RESET = "\x1b[0m";
+export const BOLD = "\x1b[31m";
 
 export const INVALID_PATH = `Please provide a valid directory/file path.\nType ${CYAN}\`distinct.css -h\`${RESET} for help.\n`;
 
@@ -44,10 +47,11 @@ export const INVALID_PATH = `Please provide a valid directory/file path.\nType $
     console.error(INVALID_PATH, err);
   }
 
+  // if the given path is a directory,
+  // we iterate over the files and check one by one(in the checkdir function)
   if (type === "dir") {
-    const files = await promises.readdir(path);
-    files.forEach((each) => {
-      console.log(each);
-    });
+    checkDir(path);
+    return;
   }
+  checkFile(path);
 })();
