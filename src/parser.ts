@@ -2,6 +2,7 @@ import { Declaration, parse, Rule, Position } from "css";
 import { readFileSync } from "fs";
 import { join } from "path";
 import strip from "strip-comments";
+import { CYAN, RED, RESET, YELLOW } from "./index";
 
 interface Property {
   property: string;
@@ -21,20 +22,37 @@ interface PositionInfo {
 }
 
 const parseError = (position: PositionInfo) => {
-  console.log(position);
+  if (!position.source || !position.start?.line || !position.start?.column) {
+    return console.error("Unknown error");
+  }
+
+  const line = readFileSync(position.source).toString().split("\n")[
+    position.start.line - 1
+  ];
+
+  const blank = position.start.column - 1;
+
+  console.error(`
+Parsing error at ${YELLOW}line ${
+    position.start?.line
+  }${RESET} in file ${YELLOW}${position.source}${RESET}:
+
+${line}
+${" ".repeat(blank)}${CYAN}${"~".repeat(line.length - blank)}${CYAN}
+
+  `);
 };
 
 const readCss = (path: string) => {
   try {
     const data = readFileSync(join(__dirname, path));
-
     return data.toString();
   } catch (err) {
     return null;
   }
 };
 
-export const customParser: (filePath: string) => Array<Ruleset> | null = (
+export const cssParser: (filePath: string) => Array<Ruleset> | null = (
   filePath: string
 ) => {
   const input = readCss(filePath);
@@ -42,7 +60,7 @@ export const customParser: (filePath: string) => Array<Ruleset> | null = (
   const source = join(__dirname, filePath);
 
   if (!input) {
-    console.error(`No such file or directory: ${source}`);
+    console.error(`No such file or directory: ${RED}${source}${RESET}`);
     return null;
   }
 
@@ -80,5 +98,3 @@ export const customParser: (filePath: string) => Array<Ruleset> | null = (
   });
   return res;
 };
-
-console.log(customParser("../test.css"));
