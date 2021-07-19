@@ -23,14 +23,13 @@
   },
   "homepage": "https://github.com/timthedev07/distinct.css#readme",
   "dependencies": {
-    "-": "^0.0.1",
-    "@types/yargs": "^17.0.2",
     "css": "^3.0.0",
     "node": "^16.5.0",
     "strip-comments": "^2.0.1",
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@types/yargs": "^17.0.2",
     "@types/css": "^0.0.33",
     "@types/node": "^16.3.3",
     "@types/strip-comments": "^2.0.1"
