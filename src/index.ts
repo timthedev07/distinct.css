@@ -54,5 +54,5 @@ export const INVALID_PATH = `Please provide a valid directory/file path.\nType $
     checkDir(path);
     return;
   }
-  checkFile(path);
+  checkFile(path, false);
 })();
