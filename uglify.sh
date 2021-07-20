@@ -1,0 +1,1 @@
+for FILE in dist/*; do npx terser "$FILE" --compress --mangle -o "$FILE"; done
