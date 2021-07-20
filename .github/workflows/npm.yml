@@ -18,6 +18,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Release
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
         run: npm publish
