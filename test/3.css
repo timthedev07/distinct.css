@@ -1,4 +1,26 @@
 body {
   color: red;
-  color: red;
+  font: 100;
+  font-family: "Courier New", Courier, monospace;
+}
+
+div {
+  color: blue;
+}
+
+h1 {
+  color: yellow;
+}
+
+body {
+  position: absolute;
+  font: 100;
+  transform: scale(3);
+  font: 100;
+}
+
+h1 {
+  color: yellow;
+  position: relative;
+  display: flex;
 }
