@@ -1,5 +1,5 @@
 import { promises, readFileSync } from "fs";
-import { ansi, CYAN, GREEN, RESET, YELLOW } from "./constants";
+import { ansi, BOLD, CYAN, GREEN, RESET, YELLOW } from "./constants";
 import { cssParser } from "./parser";
 import { PositionInfo, Property } from "./types";
 
@@ -39,7 +39,7 @@ export const showInFile = (
 
 export const reportError = (
   rules: Array<Property>,
-  text: string = "duplicated in the following places",
+  text: string = "is duplicated in the following places",
   selector?: string
 ) => {
   const rule = rules[0];
@@ -56,7 +56,7 @@ export const reportError = (
 ║                                                                               ═══╩═══
 ${showInFile(rule.position, position.start!.column! + rule.property.length + 1)}
 ║
-║ ${ansi(`\`${rule.property}: ${rule.value}\``, YELLOW)}${selector ? ` of ${ansi(selector, GREEN)}` : ""} is ${text}:
+║ ${ansi(`\`${rule.property}: ${rule.value}\``, YELLOW)}${selector ? ` of ${ansi(selector, GREEN)}` : ""} ${text}:
 ║
 ║
 ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.column! + each.property.length + 1))).join(`\n║\n║ ${"=".repeat(40)}\n║\n`)}
@@ -123,7 +123,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
 
         // if there is already a value for this particular rule for this particular selector,
         // and it is not a duplicate
-        if (prev && !prev.find((item) => item[1] === rule.value)) {
+        if (prev && !prev[1].find((item) => item.value === rule.value)) {
           // found conflicting rules on the same selector
           hasConflict = true;
           conflicts.set(first, [selector, [...prev[1], rule]]);
@@ -143,7 +143,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   if (!hasDup) {
     console.log(`${ansi("No duplicate rules found!", GREEN)}`);
   } else {
-    console.log(ansi(path, YELLOW));
+    console.log(ansi(`Duplicate rules found on ${ansi(path, YELLOW)}:`, BOLD));
 
     duplicates.forEach(([selector, val]) => {
       reportError(val, undefined, selector);
@@ -165,7 +165,8 @@ export const checkFile = (path: string, checkConflict: boolean) => {
     console.log(ansi(path, YELLOW));
   }
 
+  console.log(ansi(`Conflicting rules found on ${YELLOW + path}:`, BOLD));
   conflicts.forEach(([selector, val]) => {
-    reportError(val, "conflicted with the following rules", selector);
+    reportError(val, "conflicts with the following rules", selector);
   });
 };
