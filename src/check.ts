@@ -69,9 +69,11 @@ ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.col
 
 export const checkDir = async (path: string, checkConflict: boolean) => {
   const files = await promises.readdir(path);
-  files.forEach((file) => {
-    checkFile(join(path, file), checkConflict);
-  });
+  files
+    .filter((fn) => fn.endsWith(".css"))
+    .forEach((file) => {
+      checkFile(join(path, file), checkConflict);
+    });
 };
 
 /**
