@@ -57,7 +57,7 @@ export const reportError = (
 ║                                                                               ═══╩═══
 ${showInFile(rule.position, position.start!.column! + rule.property.length + 1)}
 ║
-║ ${ansi(`\`${rule.property}: ${rule.value}\``, YELLOW)}${selector ? ` of ${ansi(selector, GREEN)}` : ""} ${text}:
+║ ${ansi(`\`${rule.property}: ${rule.value}\``, YELLOW)}${selector ? ` of ${ansi(selector, CYAN)}` : ""} ${text}:
 ║
 ║
 ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.column! + each.property.length + 1))).join(`\n║\n║ ${"=".repeat(40)}\n║\n`)}
