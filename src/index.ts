@@ -46,7 +46,7 @@ const parser = yargs(process.argv.slice(2))
   // if the given path is a directory,
   // we iterate over the files and check one by one(in the checkdir function)
   if (type === "dir") {
-    checkDir(path);
+    checkDir(path, argv.showConflict);
     return;
   }
   checkFile(path, argv.showConflict);

@@ -1,5 +1,6 @@
 import { promises, readFileSync } from "fs";
-import { ansi, BOLD, CYAN, GREEN, RESET, YELLOW } from "./constants";
+import { join } from "path";
+import { ansi, CYAN, GREEN, RED, RESET, YELLOW } from "./constants";
 import { cssParser } from "./parser";
 import { PositionInfo, Property } from "./types";
 
@@ -66,10 +67,10 @@ ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.col
 `);
 };
 
-export const checkDir = async (path: string) => {
+export const checkDir = async (path: string, checkConflict: boolean) => {
   const files = await promises.readdir(path);
-  files.forEach(() => {
-    console.log(files);
+  files.forEach((file) => {
+    checkFile(join(path, file), checkConflict);
   });
 };
 
@@ -83,7 +84,7 @@ export const checkDir = async (path: string) => {
 export const checkFile = (path: string, checkConflict: boolean) => {
   const cssData = cssParser(path);
 
-  // if not rule sets are present
+  // if no rule sets are present
   if (!cssData) {
     return console.log(
       `File ${ansi(path, CYAN)} does not contain any css rules.`
@@ -141,9 +142,17 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   }
 
   if (!hasDup) {
-    console.log(`${ansi("No duplicate rules found!", GREEN)}`);
+    console.log(
+      `${ansi(
+        `No duplicate rules found in ${ansi(path, YELLOW)}!`,
+        GREEN,
+        true
+      )}`
+    );
   } else {
-    console.log(ansi(`Duplicate rules found on ${ansi(path, YELLOW)}:`, BOLD));
+    console.log(
+      ansi(`Duplicate rules found in ${ansi(path, YELLOW)}:`, RED, true)
+    );
 
     duplicates.forEach(([selector, val]) => {
       reportError(val, undefined, selector);
@@ -153,7 +162,9 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   if (!checkConflict) return;
 
   if (!hasConflict)
-    return console.log(ansi("No conflicting rules found!", GREEN));
+    return console.log(
+      ansi(`No conflicting rules found in ${ansi(path, YELLOW)}!`, GREEN, true)
+    );
 
   // filter out the ones that appeared only once
   for (let key of conflicts.keys()) {
@@ -161,11 +172,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
     if (val && val[1].length < 2) conflicts.delete(key);
   }
 
-  if (!hasDup) {
-    console.log(ansi(path, YELLOW));
-  }
-
-  console.log(ansi(`Conflicting rules found on ${YELLOW + path}:`, BOLD));
+  console.log(ansi(`Conflicting rules found in ${path}:`, RED, true));
   conflicts.forEach(([selector, val]) => {
     reportError(val, "conflicts with the following rules", selector);
   });
