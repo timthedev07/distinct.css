@@ -137,7 +137,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   // filter out the ones that appeared only once
   for (let key of duplicates.keys()) {
     const val = duplicates.get(key);
-    if (val && val.length < 2) duplicates.delete(key);
+    if (val && val[1].length < 2) duplicates.delete(key);
   }
 
   if (!hasDup) {
@@ -158,7 +158,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   // filter out the ones that appeared only once
   for (let key of conflicts.keys()) {
     const val = conflicts.get(key);
-    if (val && val.length < 2) conflicts.delete(key);
+    if (val && val[1].length < 2) conflicts.delete(key);
   }
 
   if (!hasDup) {
