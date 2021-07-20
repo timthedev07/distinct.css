@@ -153,7 +153,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   if (!checkConflict) return;
 
   if (!hasConflict)
-    return console.log(ansi("No conflicting rules found", GREEN));
+    return console.log(ansi("No conflicting rules found!", GREEN));
 
   // filter out the ones that appeared only once
   for (let key of conflicts.keys()) {
