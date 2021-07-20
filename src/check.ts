@@ -37,7 +37,10 @@ export const showInFile = (
 ║ ${next}`;
 };
 
-export const reportDuplicate = (rules: Array<Property>) => {
+export const reportError = (
+  rules: Array<Property>,
+  text: string = "duplicated in the following places"
+) => {
   const rule = rules[0];
 
   const position = rule.position;
@@ -52,7 +55,7 @@ export const reportDuplicate = (rules: Array<Property>) => {
 ║                                                                               ═══╩═══
 ${showInFile(rule.position, position.start!.column! + rule.property.length + 1)}
 ║
-║ \`${rule.property}: ${rule.value}\` is duplicated in the following places:
+║ \`${rule.property}: ${rule.value}\` is ${text}:
 ║
 ║
 ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.column! + each.property.length + 1))).join(`\n║\n║ ${"=".repeat(40)}\n║\n`)}
@@ -89,7 +92,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   let hasDup = false;
   let hasConflict = false;
   const duplicates: Map<string, Array<Property>> = new Map();
-  const conflicts: Map<string, string> = new Map(); // map `selector property` to `value`
+  const conflicts: Map<string, Array<Property>> = new Map(); // map `selector property` to `value`
 
   // iterating over the rule sets
   // and finding duplicates based on `seen`
@@ -113,14 +116,18 @@ export const checkFile = (path: string, checkConflict: boolean) => {
         if (!checkConflict) return;
         // now it's the part of finding conflicts
 
-        const [first, second] = strRepresentation.split("{");
+        const [first] = strRepresentation.split("{");
 
-        if (conflicts.has(first) && conflicts.get(first) !== second) {
+        const prev = conflicts.get(first);
+
+        // if there is already a value for this particular rule for this particular selector,
+        // and it is not a duplicate
+        if (prev && !prev.find((item) => item.value === rule.value)) {
           // found conflicting rules on the same selector
           hasConflict = true;
-          conflicts.set(first, "");
+          conflicts.set(first, [...prev, rule]);
         } else {
-          duplicates.set(strRepresentation, [rule]);
+          conflicts.set(first, [rule]);
         }
       });
     });
@@ -132,17 +139,32 @@ export const checkFile = (path: string, checkConflict: boolean) => {
     if (val && val.length < 2) duplicates.delete(key);
   }
 
-  duplicates.forEach((val) => {
-    // console.log(`${YELLOW}${val[0].position.source}${RESET}:`);
-    reportDuplicate(val);
-  });
-
   if (!hasDup) {
     console.log(`${ansi("No duplicate rules found!", GREEN)}`);
   } else {
+    console.log(ansi(path, YELLOW));
+
+    duplicates.forEach((val) => {
+      reportError(val);
+    });
   }
 
   if (!checkConflict) return;
 
-  if (!hasConflict) return console.log("");
+  if (!hasConflict)
+    return console.log(ansi("No conflicting rules found", GREEN));
+
+  // filter out the ones that appeared only once
+  for (let key of conflicts.keys()) {
+    const val = conflicts.get(key);
+    if (val && val.length < 2) conflicts.delete(key);
+  }
+
+  if (!hasDup) {
+    console.log(ansi(path, YELLOW));
+  }
+
+  conflicts.forEach((val) => {
+    reportError(val, "conflicted with the following rules");
+  });
 };
