@@ -1,6 +1,7 @@
 import { lstatSync } from "fs";
 import yargs from "yargs";
 import { checkDir, checkFile } from "./check";
+import { INVALID_PATH } from "./constants";
 
 const parser = yargs(process.argv.slice(2))
   .options({
@@ -20,19 +21,10 @@ const parser = yargs(process.argv.slice(2))
   .demandOption(["f"])
   .alias("c", "showConflict")
   .nargs("c", 2)
-  .describe("c", "Show conflicting rules if there is any")
+  .describe("c", "Show conflicting rules")
   .alias("v", "version")
   .help("h")
   .alias("h", "help");
-
-export const CYAN = "\x1b[36m";
-export const RED = "\x1b[31m";
-export const YELLOW = "\x1b[33m";
-export const GREEN = "\x1b[32m";
-export const RESET = "\x1b[0m";
-export const BOLD = "\x1b[31m";
-
-export const INVALID_PATH = `Please provide a valid directory/file path.\nType ${CYAN}\`distinct.css -h\`${RESET} for help.\n`;
 
 (async () => {
   const argv = await parser.argv;
