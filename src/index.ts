@@ -1,4 +1,7 @@
+#!/usr/bin/env node
+
 import { lstatSync } from "fs";
+import { join } from "path";
 import yargs from "yargs";
 import { checkDir, checkFile } from "./check";
 import { INVALID_PATH } from "./constants";
@@ -20,8 +23,8 @@ const parser = yargs(process.argv.slice(2))
   .describe("f", "File/directory to check")
   .demandOption(["f"])
   .alias("c", "showConflict")
-  .nargs("c", 2)
   .describe("c", "Show conflicting rules")
+  .boolean("c")
   .alias("v", "version")
   .help("h")
   .alias("h", "help");
@@ -35,7 +38,7 @@ const parser = yargs(process.argv.slice(2))
   let type: string = "file";
 
   try {
-    type = lstatSync(path).isDirectory() ? "dir" : "file";
+    type = lstatSync(join(process.cwd(), path)).isDirectory() ? "dir" : "file";
   } catch (err) {
     console.error(INVALID_PATH, err);
   }
@@ -46,5 +49,5 @@ const parser = yargs(process.argv.slice(2))
     checkDir(path);
     return;
   }
-  checkFile(path, false);
+  checkFile(path, argv.showConflict);
 })();

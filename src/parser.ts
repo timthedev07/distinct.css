@@ -29,7 +29,7 @@ ${" ".repeat(blank)}${ansi("~".repeat(line.length - blank), CYAN)}
 
 const readCss = (path: string) => {
   try {
-    const data = readFileSync(join(__dirname, path));
+    const data = readFileSync(join(process.cwd(), path));
     return data.toString();
   } catch (err) {
     return null;
@@ -41,7 +41,7 @@ export const cssParser: (filePath: string) => Array<RuleSet> | null = (
 ) => {
   const input = readCss(filePath);
 
-  const source = join(__dirname, filePath);
+  const source = join(process.cwd(), filePath);
 
   if (input === null) {
     console.error(`No such file or directory: ${ansi(source, RED)}`);
