@@ -12,4 +12,4 @@ npx distinct.css -f [file/directory]
 
 ## Command Line Arguments
 
-I'm to lazy to finish the rest of the documentation, I'll just leave it for now.
+I'm too lazy to finish the rest of the documentation, I'll just leave it for now.
