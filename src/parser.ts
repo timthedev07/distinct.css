@@ -1,26 +1,9 @@
-import { Declaration, parse, Rule, Position } from "css";
+import { Declaration, parse, Rule } from "css";
 import { readFileSync } from "fs";
 import { join } from "path";
 import strip from "strip-comments";
-import { CYAN, RED, RESET, YELLOW } from "./index";
-
-export interface Property {
-  property: string;
-  value: string;
-  position: PositionInfo;
-}
-
-interface RuleSet {
-  selectors: Array<string>;
-  rules: Array<Property>;
-}
-
-export interface PositionInfo {
-  start?: Position | undefined;
-  end?: Position | undefined;
-  source?: string | undefined;
-  content?: string | undefined;
-}
+import { ansi, CYAN, RED, RESET, YELLOW } from "./constants";
+import { PositionInfo, RuleSet } from "./types";
 
 const parseError = (position: PositionInfo) => {
   if (!position.source || !position.start?.line || !position.start?.column) {
@@ -39,7 +22,7 @@ Parsing error at ${YELLOW}line ${
   }${RESET} in file ${YELLOW}${position.source}${RESET}:
 
 ${line}
-${" ".repeat(blank)}${CYAN}${"~".repeat(line.length - blank)}${CYAN}
+${" ".repeat(blank)}${ansi("~".repeat(line.length - blank), CYAN)}
 
   `);
 };
