@@ -39,7 +39,8 @@ export const showInFile = (
 
 export const reportError = (
   rules: Array<Property>,
-  text: string = "duplicated in the following places"
+  text: string = "duplicated in the following places",
+  selector?: string
 ) => {
   const rule = rules[0];
 
@@ -55,7 +56,7 @@ export const reportError = (
 ║                                                                               ═══╩═══
 ${showInFile(rule.position, position.start!.column! + rule.property.length + 1)}
 ║
-║ \`${rule.property}: ${rule.value}\` is ${text}:
+║ ${ansi(`\`${rule.property}: ${rule.value}\``, YELLOW)}${selector ? ` of ${ansi(selector, GREEN)}` : ""} is ${text}:
 ║
 ║
 ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.column! + each.property.length + 1))).join(`\n║\n║ ${"=".repeat(40)}\n║\n`)}
@@ -73,7 +74,7 @@ export const checkDir = async (path: string) => {
 };
 
 /**
- * The core of this algorithms is the string representations.
+ * The core of this algorithm is the string representations.
  *
  * @param path The path to the file you want to check
  * @param checkConflict Checks for conflicting rules when `checkConflict` === true
@@ -91,8 +92,8 @@ export const checkFile = (path: string, checkConflict: boolean) => {
 
   let hasDup = false;
   let hasConflict = false;
-  const duplicates: Map<string, Array<Property>> = new Map();
-  const conflicts: Map<string, Array<Property>> = new Map(); // map `selector property` to `value`
+  const duplicates: Map<string, [string, Array<Property>]> = new Map();
+  const conflicts: Map<string, [string, Array<Property>]> = new Map(); // map `selector property` to `value`
 
   // iterating over the rule sets
   // and finding duplicates based on `seen`
@@ -107,10 +108,10 @@ export const checkFile = (path: string, checkConflict: boolean) => {
           hasDup = true;
           duplicates.set(
             strRepresentation,
-            existing ? [...existing, rule] : [rule]
+            existing ? [selector, [...existing[1], rule]] : [selector, [rule]]
           );
         } else {
-          duplicates.set(strRepresentation, [rule]);
+          duplicates.set(strRepresentation, [selector, [rule]]);
         }
 
         if (!checkConflict) return;
@@ -122,12 +123,12 @@ export const checkFile = (path: string, checkConflict: boolean) => {
 
         // if there is already a value for this particular rule for this particular selector,
         // and it is not a duplicate
-        if (prev && !prev.find((item) => item.value === rule.value)) {
+        if (prev && !prev.find((item) => item[1] === rule.value)) {
           // found conflicting rules on the same selector
           hasConflict = true;
-          conflicts.set(first, [...prev, rule]);
+          conflicts.set(first, [selector, [...prev[1], rule]]);
         } else {
-          conflicts.set(first, [rule]);
+          conflicts.set(first, [selector, [rule]]);
         }
       });
     });
@@ -144,8 +145,8 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   } else {
     console.log(ansi(path, YELLOW));
 
-    duplicates.forEach((val) => {
-      reportError(val);
+    duplicates.forEach(([selector, val]) => {
+      reportError(val, undefined, selector);
     });
   }
 
@@ -164,7 +165,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
     console.log(ansi(path, YELLOW));
   }
 
-  conflicts.forEach((val) => {
-    reportError(val, "conflicted with the following rules");
+  conflicts.forEach(([selector, val]) => {
+    reportError(val, "conflicted with the following rules", selector);
   });
 };
