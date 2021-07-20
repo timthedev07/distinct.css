@@ -69,6 +69,13 @@ export const checkDir = async (path: string) => {
   });
 };
 
+/**
+ * The core of this algorithms is the string representations.
+ *
+ * @param path The path to the file you want to check
+ * @param checkConflict Checks for conflicting rules when `checkConflict` === true
+ * @returns nothing, but console logs the result
+ */
 export const checkFile = (path: string, checkConflict: boolean) => {
   const cssData = cssParser(path);
 
@@ -80,23 +87,40 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   }
 
   let hasDup = false;
+  let hasConflict = false;
   const duplicates: Map<string, Array<Property>> = new Map();
+  const conflicts: Map<string, string> = new Map(); // map `selector property` to `value`
 
   // iterating over the rule sets
   // and finding duplicates based on `seen`
   cssData.forEach((ruleSet) => {
     ruleSet.selectors.forEach((selector) => {
       ruleSet.rules.forEach((rule) => {
-        const item = `${selector} ${rule.property}  ${rule.value}`;
+        const strRepresentation = `${selector} ${rule.property}{${rule.value}`;
 
-        const existing = duplicates.get(item);
+        const existing = duplicates.get(strRepresentation);
         if (existing) {
           // found duplicate
-
           hasDup = true;
-          duplicates.set(item, existing ? [...existing, rule] : [rule]);
+          duplicates.set(
+            strRepresentation,
+            existing ? [...existing, rule] : [rule]
+          );
         } else {
-          duplicates.set(item, [rule]);
+          duplicates.set(strRepresentation, [rule]);
+        }
+
+        if (!checkConflict) return;
+        // now it's the part of finding conflicts
+
+        const [first, second] = strRepresentation.split("{");
+
+        if (conflicts.has(first) && conflicts.get(first) !== second) {
+          // found conflicting rules on the same selector
+          hasConflict = true;
+          conflicts.set(first, "");
+        } else {
+          duplicates.set(strRepresentation, [rule]);
         }
       });
     });
@@ -114,9 +138,11 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   });
 
   if (!hasDup) {
-    console.log(`${GREEN}No duplicate rules found!${RESET}`);
+    console.log(`${ansi("No duplicate rules found!", GREEN)}`);
   } else {
   }
 
   if (!checkConflict) return;
+
+  if (!hasConflict) return console.log("");
 };

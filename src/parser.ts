@@ -44,7 +44,7 @@ export const cssParser: (filePath: string) => Array<RuleSet> | null = (
   const source = join(__dirname, filePath);
 
   if (input === null) {
-    console.error(`No such file or directory: ${RED}${source}${RESET}`);
+    console.error(`No such file or directory: ${ansi(source, RED)}`);
     return null;
   }
 
