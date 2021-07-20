@@ -87,7 +87,7 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   // if no rule sets are present
   if (!cssData) {
     return console.log(
-      `File ${ansi(path, CYAN)} does not contain any css rules.`
+      `File ${ansi(path, CYAN)} does not contain any css rules set.`
     );
   }
 
