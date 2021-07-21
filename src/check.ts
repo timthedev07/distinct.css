@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+import strip from "strip-comments";
 import { ansi, BOLD, CYAN, GREEN, RED, RESET, YELLOW } from "./constants";
 import { deepCssParser } from "./parser";
 import { PositionInfo, Property, RuleSet } from "./types";
@@ -11,7 +12,9 @@ export const showInFile = (
     return console.error("Error in unknown file.");
   }
 
-  const lines = readFileSync(position.source).toString().split("\n");
+  const lines = strip(readFileSync(position.source).toString(), {
+    language: "css",
+  }).split("\n");
 
   const line = lines[position.start!.line! - 1];
 
