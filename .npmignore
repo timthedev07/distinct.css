@@ -1,0 +1,9 @@
+src
+README.md
+LICENSE
+start.sh
+tsconfig.json
+test
+uglify.sh
+.env
+.github

@@ -1,0 +1,27 @@
+body {
+  font: 100;
+  color: red;
+  font-family: "Courier New", Courier, monospace;
+}
+
+div {
+  color: blue;
+}
+
+h1 {
+  color: yellow;
+  position: absolute;
+}
+
+body {
+  position: absolute;
+  font: 100;
+  transform: scale(3);
+  font: 100;
+}
+
+h1 {
+  color: yellow;
+  position: relative;
+  display: flex;
+}

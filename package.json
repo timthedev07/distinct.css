@@ -1,0 +1,38 @@
+{
+  "name": "distinct.css",
+  "version": "1.0.0",
+  "description": "A CLI for finding/removing duplicate css rules in a directory or a file.",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
+  "scripts": {
+    "build": "tsc && sh uglify.sh",
+    "start": "sh start.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timthedev07/distinct.css.git"
+  },
+  "keywords": [
+    "css",
+    "CLI"
+  ],
+  "author": "Tim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/timthedev07/distinct.css/issues"
+  },
+  "homepage": "https://github.com/timthedev07/distinct.css#readme",
+  "dependencies": {
+    "css": "^3.0.0",
+    "node": "^16.5.0",
+    "strip-comments": "^2.0.1",
+    "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "@types/css": "^0.0.33",
+    "@types/node": "^16.3.3",
+    "@types/strip-comments": "^2.0.1",
+    "@types/yargs": "^17.0.2",
+    "terser": "^5.7.1"
+  }
+}
