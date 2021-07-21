@@ -32,7 +32,7 @@ distinct.css -f [file/directory]
 ## Command Line Usage
 
 ```
-Usage: index.ts -f [path]
+Usage: distinct.css -f [path]
 
 Options:
   -f, -d, --file, --directory  File/directory to check       [string] [required]
@@ -43,10 +43,10 @@ Options:
   -v, --version                Show version number                     [boolean]
 
 Examples:
-  index.ts -f button.css             - searches for duplicate css rules in file
+  distinct.css -f button.css             - searches for duplicate css rules in file
                                      button.css
-  index.ts -r -f css/                - recursively searches for duplicate css
+  distinct.css -r -f css/                - recursively searches for duplicate css
                                      rules in the css directory
-  index.ts -c -f iHaveConflicts.css  - searches for duplicate and conflicting
+  distinct.css -c -f iHaveConflicts.css  - searches for duplicate and conflicting
                                      css rules in iHaveConflicts.css
 ```
