@@ -1,4 +1,6 @@
-# distinct.css
+<h1 align="center">
+  <img src="logo.svg" width="70%">
+</h1>
 
 ## About
 
@@ -18,7 +20,7 @@ Install as a dev dependency for your project:
 yarn add -D distinct.css
 ```
 
-## Usage
+## Get Started
 
 ```bash
 distinct.css -f [file/directory]
