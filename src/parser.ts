@@ -1,9 +1,16 @@
-import { Declaration, parse, Rule } from "css";
+import { AtRule, Comment, Declaration, parse, Rule } from "css";
 import { lstatSync, promises, readFileSync } from "fs";
 import { join } from "path";
-import strip from "strip-comments";
 import { ansi, CYAN, RED, RESET, YELLOW } from "./constants";
 import { PositionInfo, RuleSet } from "./types";
+
+const isRule = (value: Comment | Rule | AtRule): value is Rule => {
+  return value.hasOwnProperty("selectors");
+};
+
+const isDeclaration = (value: Declaration | Comment): value is Declaration => {
+  return value.hasOwnProperty("property");
+};
 
 const parseError = (position: PositionInfo) => {
   if (!position.source || !position.start?.line || !position.start?.column) {
@@ -48,10 +55,10 @@ export const cssParser: (filePath: string) => Array<RuleSet> | null = (
     return null;
   }
 
-  const commentsRemoved = strip(input, { language: "css" });
-
-  const rules: [Rule] = parse(commentsRemoved, { silent: true, source })
-    .stylesheet?.rules as [Rule];
+  const rules: (Rule | Comment | AtRule)[] | undefined = parse(input, {
+    silent: true,
+    source,
+  }).stylesheet?.rules;
 
   if (!rules || !rules.length) {
     return null;
@@ -60,25 +67,32 @@ export const cssParser: (filePath: string) => Array<RuleSet> | null = (
   const res: Array<RuleSet> = [];
 
   rules.forEach((each) => {
+    // use the User Defined Type Guard to ensure the type is Rule
+    // and also filter out Comment and AtRule
+    if (!isRule(each)) return;
     if (!each.selectors || !each.selectors.length) return;
     if (!each.declarations || !each.declarations.length) return;
 
+    const declarations: Declaration[] = each.declarations;
+
     res.push({
       selectors: each.selectors,
-      rules: each.declarations.map((declaration) => {
-        const { property, value, position }: Declaration = declaration;
+      rules: declarations
+        .filter((item) => isDeclaration(item))
+        .map((declaration) => {
+          const { property, value, position }: Declaration = declaration;
 
-        if (!property || !value) {
-          parseError(position!);
-          process.exit();
-        }
+          if (!property || !value) {
+            parseError(position!);
+            process.exit();
+          }
 
-        return {
-          property,
-          value,
-          position: position!,
-        };
-      }),
+          return {
+            property,
+            value,
+            position: position!,
+          };
+        }),
     });
   });
   return res;
