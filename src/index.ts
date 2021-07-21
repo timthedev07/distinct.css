@@ -10,6 +10,7 @@ const parser = yargs(process.argv.slice(2))
   .options({
     f: { type: "string" },
     c: { type: "boolean", default: false },
+    r: { type: "boolean", default: true },
   })
   .usage("Usage: $0 -f [path]")
   .example(
@@ -25,6 +26,9 @@ const parser = yargs(process.argv.slice(2))
   .alias("c", "showConflict")
   .describe("c", "Show conflicting rules")
   .boolean("c")
+  .alias("r", "recursive")
+  .describe("r", "Recursively search in a directory")
+  .boolean("r")
   .alias("v", "version")
   .help("h")
   .alias("h", "help");
@@ -46,7 +50,7 @@ const parser = yargs(process.argv.slice(2))
   // if the given path is a directory,
   // we iterate over the files and check one by one(in the checkdir function)
   if (type === "dir") {
-    checkDir(path, argv.showConflict);
+    checkDir(path, argv.showConflict, argv.recursive);
     return;
   }
   checkFile(path, argv.showConflict);
