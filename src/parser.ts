@@ -1,5 +1,5 @@
 import { Declaration, parse, Rule } from "css";
-import { readFileSync } from "fs";
+import { lstatSync, promises, readFileSync } from "fs";
 import { join } from "path";
 import strip from "strip-comments";
 import { ansi, CYAN, RED, RESET, YELLOW } from "./constants";
@@ -81,5 +81,56 @@ export const cssParser: (filePath: string) => Array<RuleSet> | null = (
       }),
     });
   });
+  return res;
+};
+
+/**
+ *
+ * Iteratively parses all css files in the given directory and its sub directories `recursively`.
+ *
+ * @param dirName The path to the directory to where the file inside of it are going to be parsed.
+ * @returns
+ */
+export const deepCssParser = async (
+  dirName: string,
+  recursive: boolean = true
+) => {
+  let res: RuleSet[] = [];
+  let queue: string[] = []; // use queue rather than stack so that the resulting data would be ordered in ascending order
+  let files = [];
+
+  try {
+    files = await promises.readdir(dirName);
+  } catch (err) {
+    return cssParser(dirName);
+  }
+
+  // initialize queue with filenames
+  queue = queue.concat(files);
+
+  while (queue.length) {
+    // dequeue
+    const last = queue.shift();
+
+    if (!last) {
+      break;
+    }
+
+    const relative = join(...[dirName, last]);
+    const absolute = join(...[process.cwd(), relative]);
+
+    if (lstatSync(absolute).isDirectory()) {
+      if (recursive) {
+        queue.push(
+          ...(await promises.readdir(absolute)).map((each) => join(last, each))
+        );
+      }
+      continue;
+    }
+
+    res = res.concat(cssParser(relative) || []);
+  }
+  // console.log(inspect(res, true, 50, true));
+  // console.log(res);
   return res;
 };

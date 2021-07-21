@@ -5,6 +5,7 @@ import { join } from "path";
 import yargs from "yargs";
 import { checkDir, checkFile } from "./check";
 import { INVALID_PATH } from "./constants";
+import { cssParser } from "./parser";
 
 const parser = yargs(process.argv.slice(2))
   .options({
@@ -47,11 +48,10 @@ const parser = yargs(process.argv.slice(2))
     console.error(INVALID_PATH, err);
   }
 
-  // if the given path is a directory,
-  // we iterate over the files and check one by one(in the checkdir function)
   if (type === "dir") {
     checkDir(path, argv.showConflict, argv.recursive);
     return;
   }
-  checkFile(path, argv.showConflict);
+  const cssData = cssParser(path);
+  checkFile(path, argv.showConflict, cssData);
 })();

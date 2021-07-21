@@ -2,3 +2,7 @@ body {
   font-family: cursive;
   font-family: "Courier New", Courier, monospace;
 }
+
+div {
+  background-repeat: space;
+}

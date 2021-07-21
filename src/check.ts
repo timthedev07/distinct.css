@@ -1,8 +1,7 @@
-import { lstatSync, promises, readFileSync } from "fs";
-import { join } from "path";
-import { ansi, CYAN, GREEN, RED, RESET, YELLOW } from "./constants";
-import { cssParser } from "./parser";
-import { PositionInfo, Property } from "./types";
+import { readFileSync } from "fs";
+import { ansi, BOLD, CYAN, GREEN, RED, RESET, YELLOW } from "./constants";
+import { deepCssParser } from "./parser";
+import { PositionInfo, Property, RuleSet } from "./types";
 
 export const showInFile = (
   position: PositionInfo,
@@ -31,7 +30,8 @@ export const showInFile = (
     nextInd < lines.length ? ` ${nextInd + 1} | ` + lines[nextInd] : "";
 
   // prettier-ignore
-  return `║ ${beforeBefore}
+  return `║ ${ansi(position.source!, BOLD)}
+║ ${beforeBefore}
 ║ ${before}
 ║  ${position.start!.line} | ${YELLOW}${line}${RESET}
 ║      ${ansi(`${"~".repeat(pointerPosition || line.length)}${pointerPosition ? "^" : ""}${"~".repeat(pointerPosition || line.length)}`, CYAN)}
@@ -72,16 +72,13 @@ export const checkDir = async (
   checkConflict: boolean,
   recursive: boolean
 ) => {
-  const files = await promises.readdir(path);
+  const cssData = await deepCssParser(path, recursive);
 
-  files.forEach((file) => {
-    const joinedPath = join(path, file);
-    if (lstatSync(joinedPath).isDirectory() || !file.endsWith(".css")) {
-      checkDir(joinedPath, checkConflict, recursive);
-      return;
-    }
-    checkFile(joinedPath, checkConflict);
-  });
+  if (!cssData) {
+    return console.log(`No valid css rule are found in ${ansi(path, CYAN)}.`);
+  }
+
+  checkCss(path, cssData, checkConflict);
 };
 
 /**
@@ -91,16 +88,32 @@ export const checkDir = async (
  * @param checkConflict Checks for conflicting rules when `checkConflict` === true
  * @returns nothing, but console logs the result
  */
-export const checkFile = (path: string, checkConflict: boolean) => {
-  const cssData = cssParser(path);
-
+export const checkFile = (
+  path: string,
+  checkConflict: boolean,
+  cssData: RuleSet[] | null
+) => {
   // if no rule sets are present
   if (!cssData) {
     return console.log(
-      `File ${ansi(path, CYAN)} does not contain any css rules set.`
+      `File/directory ${ansi(path, CYAN)} doesn't have any css rules.`
     );
   }
+  checkCss(path, cssData, checkConflict);
+};
 
+/**
+ *
+ * @param dirName Used for logging purposes
+ * @param cssData The data to analyze
+ * @param checkConflict Checks for conflicting rules when `checkConflict` === true
+ * @returns
+ */
+export const checkCss = (
+  dirName: string,
+  cssData: RuleSet[],
+  checkConflict: boolean
+) => {
   let hasDup = false;
   let hasConflict = false;
   const duplicates: Map<string, [string, Array<Property>]> = new Map();
@@ -154,14 +167,14 @@ export const checkFile = (path: string, checkConflict: boolean) => {
   if (!hasDup) {
     console.log(
       `${ansi(
-        `No duplicate rules found in ${ansi(path, YELLOW)}!`,
+        `No duplicate rules found in ${ansi(dirName, YELLOW)}!`,
         GREEN,
         true
       )}`
     );
   } else {
     console.log(
-      ansi(`Duplicate rules found in ${ansi(path, YELLOW)}:`, RED, true)
+      ansi(`Duplicate rules found in ${ansi(dirName, YELLOW)}:`, RED, true)
     );
 
     duplicates.forEach(([selector, val]) => {
@@ -173,7 +186,11 @@ export const checkFile = (path: string, checkConflict: boolean) => {
 
   if (!hasConflict)
     return console.log(
-      ansi(`No conflicting rules found in ${ansi(path, YELLOW)}!`, GREEN, true)
+      ansi(
+        `No conflicting rules found in ${ansi(dirName, YELLOW)}!`,
+        GREEN,
+        true
+      )
     );
 
   // filter out the ones that appeared only once
@@ -182,7 +199,9 @@ export const checkFile = (path: string, checkConflict: boolean) => {
     if (val && val[1].length < 2) conflicts.delete(key);
   }
 
-  console.log(ansi(`Conflicting rules found in ${path}:`, RED, true));
+  console.log(
+    ansi(`Conflicting rules found in ${ansi(dirName, YELLOW)}:`, RED, true)
+  );
   conflicts.forEach(([selector, val]) => {
     reportError(val, "conflicts with the following rules", selector);
   });
