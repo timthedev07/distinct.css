@@ -157,7 +157,6 @@ export const checkCss = (
       });
     });
   });
-
   // filter out the ones that appeared only once
   for (let key of duplicates.keys()) {
     const val = duplicates.get(key);

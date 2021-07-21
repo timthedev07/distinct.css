@@ -18,6 +18,14 @@ const parser = yargs(process.argv.slice(2))
     "$0 -f button.css",
     "- searches for duplicate css rules in file button.css"
   )
+  .example(
+    "$0 -r -f css/",
+    "- recursively searches for duplicate css rules in the css directory"
+  )
+  .example(
+    "$0 -c -f iHaveConflicts.css",
+    "- searches for duplicate and conflicting css rules in iHaveConflicts.css"
+  )
   .alias("f", "file")
   .alias("f", "d")
   .alias("f", "directory")
