@@ -1,4 +1,4 @@
-import { promises, readFileSync } from "fs";
+import { lstatSync, promises, readFileSync } from "fs";
 import { join } from "path";
 import { ansi, CYAN, GREEN, RED, RESET, YELLOW } from "./constants";
 import { cssParser } from "./parser";
@@ -67,13 +67,21 @@ ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.col
 `);
 };
 
-export const checkDir = async (path: string, checkConflict: boolean) => {
+export const checkDir = async (
+  path: string,
+  checkConflict: boolean,
+  recursive: boolean
+) => {
   const files = await promises.readdir(path);
-  files
-    .filter((fn) => fn.endsWith(".css"))
-    .forEach((file) => {
-      checkFile(join(path, file), checkConflict);
-    });
+
+  files.forEach((file) => {
+    const joinedPath = join(path, file);
+    if (lstatSync(joinedPath).isDirectory() || !file.endsWith(".css")) {
+      checkDir(joinedPath, checkConflict, recursive);
+      return;
+    }
+    checkFile(joinedPath, checkConflict);
+  });
 };
 
 /**
