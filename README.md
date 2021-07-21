@@ -45,8 +45,8 @@ Options:
 Examples:
   distinct.css -f button.css             - searches for duplicate css rules in file
                                      button.css
-  distinct.css -r -f css/                - recursively searches for duplicate css
+  distinct.css -rf css/                - recursively searches for duplicate css
                                      rules in the css directory
-  distinct.css -c -f iHaveConflicts.css  - searches for duplicate and conflicting
+  distinct.css -cf iHaveConflicts.css  - searches for duplicate and conflicting
                                      css rules in iHaveConflicts.css
 ```
