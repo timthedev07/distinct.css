@@ -1,6 +1,7 @@
 <h1 align="center">
   <img src="logo.svg" width="70%">
 </h1>
+
 <p align="center">
   <img src="https://img.shields.io/npm/l/distinct.css?style=for-the-badge">
 </p>
