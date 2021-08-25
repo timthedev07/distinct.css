@@ -1,4 +1,13 @@
+/* one conflict */
 div {
   color: blue;
   background-color: aliceblue;
+}
+
+div.class {
+  color: blue;
+}
+
+div {
+  color: red;
 }
