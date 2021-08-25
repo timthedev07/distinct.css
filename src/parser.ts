@@ -34,7 +34,7 @@ ${" ".repeat(blank)}${ansi("~".repeat(line.length - blank), CYAN)}
   `);
 };
 
-const readCss = (path: string) => {
+const readFile = (path: string) => {
   try {
     const data = readFileSync(join(process.cwd(), path));
     return data.toString();
@@ -46,7 +46,7 @@ const readCss = (path: string) => {
 export const cssParser: (filePath: string) => Array<RuleSet> | null = (
   filePath: string
 ) => {
-  const input = readCss(filePath);
+  const input = readFile(filePath);
 
   const source = join(process.cwd(), filePath);
 
