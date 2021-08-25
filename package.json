@@ -25,6 +25,7 @@
   "dependencies": {
     "css": "^3.0.0",
     "node": "^16.5.0",
+    "node-html-parser": "^4.1.3",
     "strip-comments": "^2.0.1",
     "yargs": "^17.0.1"
   },
