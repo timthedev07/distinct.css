@@ -205,3 +205,8 @@ export const checkCss = (
     reportError(val, "conflicts with the following rules", selector);
   });
 };
+
+export const checkUnused = (
+  cssFileContents: RuleSet[],
+  htmlFileContents: string[]
+) => {};
