@@ -103,7 +103,7 @@ export const cssParser: (filePath: string) => Array<RuleSet> | null = (
  *
  * Iteratively parses all css files in the given directory and its sub directories `recursively`.
  *
- * @param dirName The path to the directory to where the file inside of it are going to be parsed.
+ * @param dirName The absolute path to the directory to where the file inside of it are going to be parsed.
  * @returns
  */
 export const deepCssParser = async (
