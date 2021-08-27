@@ -3,6 +3,7 @@ import { lstatSync, promises, readFileSync } from "fs";
 import { join } from "path";
 import { ansi, CYAN, RED, RESET, YELLOW } from "./constants";
 import { PositionInfo, RuleSet } from "./types";
+import { parse as parseRawHTML } from "node-html-parser";
 
 const isRule = (value: Comment | Rule | AtRule): value is Rule => {
   return value.hasOwnProperty("selectors");
@@ -144,7 +145,13 @@ export const deepCssParser = async (
 
     res = res.concat(cssParser(relative) || []);
   }
-  // console.log(inspect(res, true, 50, true));
-  // console.log(res);
   return res;
+};
+
+export const parseHTML = (path: string) => {
+  const fileContent = readFileSync(path).toString();
+
+  const parsed = parseRawHTML(fileContent);
+
+  console.log(parsed);
 };
