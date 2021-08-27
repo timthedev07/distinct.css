@@ -21,4 +21,5 @@ export interface PositionInfo {
 export interface RemoveUnusedAnswerType {
   htmlPath: string;
   cssPath: string;
+  recursive: string;
 }
