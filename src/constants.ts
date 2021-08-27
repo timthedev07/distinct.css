@@ -17,3 +17,9 @@ export const INVALID_PATH = `Please provide a valid directory/file path.\nType $
   "`distinct.css -h`",
   CYAN
 )} for help.\n`;
+
+export const INVALID_CSS_PATH =
+  "Please provide a valid path to a HTML file or a directory containing HTML files.";
+
+export const INVALID_HTML_PATH =
+  "Please provide a valid path to a CSS file or a directory containing CSS files.";
