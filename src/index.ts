@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-import { lstatSync } from "fs";
 import { join } from "path";
-import yargs, { boolean } from "yargs";
+import yargs from "yargs";
 import { checkDir, checkFile } from "./check";
 import { INVALID_CSS_PATH, INVALID_HTML_PATH, INVALID_PATH } from "./constants";
-import { cssParser, parseHTML } from "./parser";
+import { cssParser } from "./parser";
 import { prompt } from "inquirer";
 import { RemoveUnusedAnswerType } from "./types";
 import { isDirectory } from "./utils";
