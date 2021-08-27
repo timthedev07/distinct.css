@@ -17,3 +17,8 @@ export interface PositionInfo {
   source?: string | undefined;
   content?: string | undefined;
 }
+
+export interface RemoveUnusedAnswerType {
+  htmlPath: string;
+  cssPath: string;
+}
