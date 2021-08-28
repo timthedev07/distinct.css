@@ -3,7 +3,7 @@ import { lstatSync, promises, readFileSync } from "fs";
 import { join } from "path";
 import { ansi, CYAN, RED, RESET, YELLOW } from "./constants";
 import { PositionInfo, RuleSet } from "./types";
-import { parse as parseRawHTML } from "node-html-parser";
+import { load } from "cheerio";
 
 const isRule = (value: Comment | Rule | AtRule): value is Rule => {
   return value.hasOwnProperty("selectors");
@@ -148,10 +148,26 @@ export const deepCssParser = async (
   return res;
 };
 
+/**
+ *
+ * @param path Absolute path to HTML file
+ */
 export const parseHTML = (path: string) => {
-  const fileContent = readFileSync(path).toString();
+  let fileContent: string;
 
-  const parsed = parseRawHTML(fileContent);
+  try {
+    fileContent = readFileSync(path).toString();
+  } catch (err) {
+    return console.log(ansi("Invalid path to HTML file.", RED));
+  }
 
-  console.log(parsed);
+  const $ = load(fileContent);
+  const all = $("*").get();
+  console.log(all.map((each) => each.name));
 };
+
+/**
+ *
+ * @param path Absolute path to the directory with HTML files
+ */
+export const deepParseHTML = (_path: string) => {};
