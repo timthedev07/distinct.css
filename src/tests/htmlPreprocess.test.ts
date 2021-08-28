@@ -2,6 +2,17 @@ import { expect, test, describe } from "@jest/globals";
 import { preProcessRawHTML } from "../utils";
 
 describe("Raw HTML Preprocessing function", () => {
+  test("removes DOCTYPE tag", () => {
+    const processedHTML = preProcessRawHTML(`
+<!DOCTYPE html>
+<!DOCTYPE xml>
+<!DOCTYPE strangeml>
+`);
+    expect(processedHTML.indexOf("<!DOCTYPE html>")).toBe(-1);
+    expect(processedHTML.indexOf("<!DOCTYPE xml>")).toBe(-1);
+    expect(processedHTML.indexOf("<!DOCTYPE strangeml>")).toBe(-1);
+  });
+
   test("removes html tag", () => {
     const processedHTML = preProcessRawHTML(`
 <!DOCTYPE html>
