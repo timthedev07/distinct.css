@@ -10,7 +10,7 @@ export const isDirectory = (path: string) => lstatSync(path).isDirectory();
 /**
  * What I do:
  *
- * - Remove <html>, <body> tags along with their closing tags
+ * - Remove <html> tags along with their closing tags
  * - Remove <head> section
  *
  * So this would result in leaving only the nodes inside of the body tag in the string
@@ -19,5 +19,10 @@ export const isDirectory = (path: string) => lstatSync(path).isDirectory();
  * @returns
  */
 export const preProcessRawHTML = (rawHTML: string) => {
-  return "";
+  rawHTML.replace(/<body>/gi, "");
+  rawHTML.replace(/<\/body>/gi, "");
+  rawHTML.replace(/<html>/gi, "");
+  rawHTML.replace(/<\/html>/gi, "");
+
+  if (rawHTML.indexOf("<head>")) return "";
 };
