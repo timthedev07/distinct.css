@@ -57,6 +57,39 @@ const parser = yargs(process.argv.slice(2))
   .help("h")
   .alias("h", "help");
 
+const handleUFlagResponse = async (
+  cssPath: string,
+  htmlPath: string,
+  recursive: boolean
+) => {
+  const absoluteCssPath = join(process.cwd(), cssPath);
+
+  let cssRulesets: RuleSet[] | null = null;
+
+  try {
+    cssRulesets = isDirectory(absoluteCssPath)
+      ? await deepCssParser(cssPath, recursive)
+      : cssParser(cssPath);
+    if (!cssRulesets)
+      return console.log(
+        ansi("No rule sets are present in the given path.", CYAN)
+      );
+  } catch (err) {
+    return console.log(ansi("Invalid Path", RED));
+  }
+
+  const absoluteHTMLPath = join(process.cwd(), htmlPath);
+  const HTMLData = isDirectory(absoluteHTMLPath)
+    ? await deepParseHTML(htmlPath, recursive)
+    : parseHTML(htmlPath);
+
+  if (!HTMLData) {
+    return;
+  }
+
+  checkUnused(cssRulesets, HTMLData);
+};
+
 (async () => {
   const argv = await parser.argv;
 
@@ -84,32 +117,7 @@ const parser = yargs(process.argv.slice(2))
     if (!cssPath) return console.log(INVALID_CSS_PATH);
     if (!htmlPath) return console.log(INVALID_HTML_PATH);
 
-    const absoluteCssPath = join(process.cwd(), cssPath);
-
-    let cssRulesets: RuleSet[] | null = null;
-
-    try {
-      cssRulesets = isDirectory(absoluteCssPath)
-        ? await deepCssParser(cssPath, recursive)
-        : cssParser(cssPath);
-      if (!cssRulesets)
-        return console.log(
-          ansi("No rule sets are present in the given path.", CYAN)
-        );
-    } catch (err) {
-      return console.log(ansi("Invalid Path", RED));
-    }
-
-    const absoluteHTMLPath = join(process.cwd(), htmlPath);
-    const HTMLData = isDirectory(absoluteHTMLPath)
-      ? await deepParseHTML(htmlPath, recursive)
-      : parseHTML(htmlPath);
-
-    if (!HTMLData) {
-      return;
-    }
-
-    checkUnused(cssRulesets, HTMLData);
+    handleUFlagResponse(cssPath, htmlPath, recursive);
   } else {
     const path = argv.f;
     if (!path) return console.error(INVALID_PATH);
