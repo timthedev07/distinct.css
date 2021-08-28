@@ -37,7 +37,7 @@ export const preProcessRawHTML = (rawHTML: string) => {
       return "";
     }
 
-    res = res.substr(0, headTagIndex) + res.substr(closingHeadTagIndex + 6);
+    res = res.substr(0, headTagIndex) + res.substr(closingHeadTagIndex + 7);
   }
 
   return res;
