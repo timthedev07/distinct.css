@@ -207,6 +207,6 @@ export const checkCss = (
 };
 
 export const checkUnused = (
-  cssFileContents: RuleSet[],
-  htmlFileContents: string[]
+  _cssFileContents: RuleSet[],
+  _htmlFileContents: string[]
 ) => {};
