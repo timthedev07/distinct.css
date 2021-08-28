@@ -23,6 +23,7 @@ export const preProcessRawHTML = (rawHTML: string) => {
   let res = rawHTML;
   res = res.replace(/<html>/gi, "");
   res = res.replace(/<\/html>/gi, "");
+  res = res.replace(/<!DOCTYPE\s*.*>/gi, "");
 
   const headTagIndex = res.indexOf("<head>");
 
