@@ -3,15 +3,22 @@
 import { join } from "path";
 import yargs from "yargs";
 import { checkDir, checkFile } from "./check";
-import { INVALID_CSS_PATH, INVALID_HTML_PATH, INVALID_PATH } from "./constants";
-import { cssParser } from "./parser";
+import {
+  ansi,
+  CYAN,
+  INVALID_CSS_PATH,
+  INVALID_HTML_PATH,
+  INVALID_PATH,
+  RED,
+} from "./constants";
+import { cssParser, deepCssParser, parseHTML } from "./parser";
 import { prompt } from "inquirer";
-import { RemoveUnusedAnswerType } from "./types";
+import { RemoveUnusedAnswerType, RuleSet } from "./types";
 import { isDirectory } from "./utils";
 
 const parser = yargs(process.argv.slice(2))
   .options({
-    f: { type: "string" },
+    f: { type: "string", default: "" },
     c: { type: "boolean", default: false },
     r: { type: "boolean", default: true },
     u: { type: "boolean", default: true },
@@ -53,7 +60,7 @@ const parser = yargs(process.argv.slice(2))
 (async () => {
   const argv = await parser.argv;
 
-  if (!argv.u) {
+  if (argv.u) {
     const { cssPath, htmlPath, recursive } =
       await prompt<RemoveUnusedAnswerType>([
         {
@@ -68,16 +75,33 @@ const parser = yargs(process.argv.slice(2))
         },
         {
           name: "recursive",
-          type: "checkbox",
-          message: "Recursive?[false]",
+          type: "confirm",
+          message: "Recursive? [N]",
           default: false,
         },
       ]);
 
-    console.log(recursive);
-
     if (!cssPath) return console.log(INVALID_CSS_PATH);
     if (!htmlPath) return console.log(INVALID_HTML_PATH);
+
+    const absoluteCssPath = join(process.cwd(), cssPath);
+
+    let cssRulesets: RuleSet[] | null = null;
+
+    try {
+      cssRulesets = isDirectory(absoluteCssPath)
+        ? await deepCssParser(cssPath, recursive)
+        : cssParser(cssPath);
+      if (!cssRulesets)
+        return console.log(
+          ansi("No rule sets are present in the given path.", CYAN)
+        );
+    } catch (err) {
+      return console.log(ansi("Invalid Path", RED));
+    }
+
+    const absoluteHTMLPath = join(process.cwd(), htmlPath);
+    parseHTML(absoluteHTMLPath);
   } else {
     const path = argv.f;
     if (!path) return console.error(INVALID_PATH);
