@@ -1,4 +1,5 @@
 import { lstatSync } from "fs";
+import { ansi, RED } from "./constants";
 
 /**
  *
@@ -29,6 +30,11 @@ export const preProcessRawHTML = (rawHTML: string) => {
     let closingHeadTagIndex = res.indexOf("</head>");
     if (closingHeadTagIndex === -1) {
       closingHeadTagIndex = res.indexOf("<body>");
+    }
+
+    if (closingHeadTagIndex === -1) {
+      console.log(ansi("Please provide a valid body in you HTML.", RED));
+      return "";
     }
 
     res = res.substr(0, headTagIndex) + res.substr(closingHeadTagIndex + 6);
