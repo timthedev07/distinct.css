@@ -19,8 +19,20 @@ export const isDirectory = (path: string) => lstatSync(path).isDirectory();
  * @returns
  */
 export const preProcessRawHTML = (rawHTML: string) => {
-  rawHTML.replace(/<html>/gi, "");
-  rawHTML.replace(/<\/html>/gi, "");
+  let res = rawHTML;
+  res = res.replace(/<html>/gi, "");
+  res = res.replace(/<\/html>/gi, "");
 
-  if (rawHTML.indexOf("<head>")) return "";
+  const headTagIndex = res.indexOf("<head>");
+
+  if (headTagIndex > -1) {
+    let closingHeadTagIndex = res.indexOf("</head>");
+    if (closingHeadTagIndex === -1) {
+      closingHeadTagIndex = res.indexOf("<body>");
+    }
+
+    res = res.substr(0, headTagIndex) + res.substr(closingHeadTagIndex + 6);
+  }
+
+  return res;
 };
