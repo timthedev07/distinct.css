@@ -4,7 +4,7 @@ import { join } from "path";
 import { ansi, CYAN, INVALID_HTML_PATH, RED, RESET, YELLOW } from "./constants";
 import { PositionInfo, RuleSet } from "./types";
 import { CheerioAPI, load } from "cheerio";
-import { isDirectory, preProcessRawHTML } from "./utils";
+import { isDirectory } from "./utils";
 
 const isRule = (value: Comment | Rule | AtRule): value is Rule => {
   return value.hasOwnProperty("selectors");
@@ -213,8 +213,8 @@ export const deepParseHTML = async (
     }
 
     const currentRawHTML = readFileSync(absolute).toString();
-
-    rawHTMLContents += preProcessRawHTML(currentRawHTML);
+    rawHTMLContents += currentRawHTML;
   }
+
   return load(rawHTMLContents);
 };

@@ -1,5 +1,4 @@
 import { lstatSync } from "fs";
-import { ansi, RED } from "./constants";
 
 /**
  *
@@ -7,38 +6,3 @@ import { ansi, RED } from "./constants";
  * @returns
  */
 export const isDirectory = (path: string) => lstatSync(path).isDirectory();
-
-/**
- * What I do:
- *
- * - Remove <html> tags along with its closing tags
- * - Remove <head> section
- *
- * So this would result in leaving only the nodes inside of the body tag in the string
- *
- * @param rawHTML
- * @returns Processed HTML without all the other annoying stuff.
- */
-export const preProcessRawHTML = (rawHTML: string) => {
-  let res = rawHTML;
-  let re = /(<html>|<\/html>|<!DOCTYPE\s*.*>)/g;
-  res = res.replace(re, "");
-
-  const headTagIndex = res.indexOf("<head>");
-
-  if (headTagIndex > -1) {
-    let closingHeadTagIndex = res.indexOf("</head>");
-    if (closingHeadTagIndex === -1) {
-      closingHeadTagIndex = res.indexOf("<body>");
-    }
-
-    if (closingHeadTagIndex === -1) {
-      console.log(ansi("Please provide a valid body in you HTML.", RED));
-      return "";
-    }
-
-    res = res.substr(0, headTagIndex) + res.substr(closingHeadTagIndex + 7);
-  }
-
-  return res;
-};
