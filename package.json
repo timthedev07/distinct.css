@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc && sh uglify.sh",
     "start": "sh start.sh",
-    "test": "yarn jest"
+    "test": "yarn run --silent jest"
   },
   "repository": {
     "type": "git",
