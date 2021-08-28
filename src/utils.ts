@@ -19,8 +19,6 @@ export const isDirectory = (path: string) => lstatSync(path).isDirectory();
  * @returns
  */
 export const preProcessRawHTML = (rawHTML: string) => {
-  rawHTML.replace(/<body>/gi, "");
-  rawHTML.replace(/<\/body>/gi, "");
   rawHTML.replace(/<html>/gi, "");
   rawHTML.replace(/<\/html>/gi, "");
 
