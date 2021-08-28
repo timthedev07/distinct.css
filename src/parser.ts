@@ -172,7 +172,7 @@ export const parseHTML = (path: string) => {
 
 /**
  *
- * @param path Absolute path to the directory with HTML files
+ * @param path Relative path to the directory with HTML files
  * @param recursive Parse recursively if true
  */
 export const deepParseHTML = async (
