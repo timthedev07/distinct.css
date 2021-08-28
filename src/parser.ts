@@ -1,9 +1,11 @@
 import { AtRule, Comment, Declaration, parse, Rule } from "css";
-import { lstatSync, promises, readFileSync } from "fs";
+import { promises, readFileSync } from "fs";
 import { join } from "path";
-import { ansi, CYAN, RED, RESET, YELLOW } from "./constants";
+import { ansi, CYAN, INVALID_HTML_PATH, RED, RESET, YELLOW } from "./constants";
 import { PositionInfo, RuleSet } from "./types";
 import { load } from "cheerio";
+import { isDirectory } from "./utils";
+import { Element } from "domhandler";
 
 const isRule = (value: Comment | Rule | AtRule): value is Rule => {
   return value.hasOwnProperty("selectors");
@@ -131,10 +133,10 @@ export const deepCssParser = async (
       break;
     }
 
-    const relative = join(...[dirName, last]);
-    const absolute = join(...[process.cwd(), relative]);
+    const relative = join(dirName, last);
+    const absolute = join(process.cwd(), relative);
 
-    if (lstatSync(absolute).isDirectory()) {
+    if (isDirectory(absolute)) {
       if (recursive) {
         queue.push(
           ...(await promises.readdir(absolute)).map((each) => join(last, each))
@@ -158,17 +160,59 @@ export const parseHTML = (path: string) => {
   try {
     fileContent = readFileSync(path).toString();
   } catch (err) {
-    return console.log(ansi("Invalid path to HTML file.", RED));
+    console.log(ansi("Invalid path to HTML file.", RED));
+    return null;
   }
 
   const $ = load(fileContent);
-  const html = $("html");
+  const elements = $("body *").get();
 
-  console.log(html.html());
+  return elements;
 };
 
 /**
  *
  * @param path Absolute path to the directory with HTML files
+ * @param recursive Parse recursively if true
  */
-export const deepParseHTML = (_path: string) => {};
+export const deepParseHTML = async (
+  path: string,
+  recursive: boolean
+): Promise<Element[] | null> => {
+  let res: Element[] = [];
+  let queue: string[] = []; // use queue rather than stack so that the resulting data would be ordered in ascending order
+  let files: string[] = [];
+
+  try {
+    files = await promises.readdir(path);
+  } catch (err) {
+    if (isDirectory(path)) return parseHTML(path);
+    console.log(INVALID_HTML_PATH);
+    return null;
+  }
+
+  queue = queue.concat(files);
+
+  while (queue.length) {
+    const last = queue.shift();
+
+    if (!last) {
+      break;
+    }
+
+    const relative = join(path, last);
+    const absolute = join(process.cwd(), relative);
+
+    if (isDirectory(absolute)) {
+      if (recursive) {
+        queue.push(
+          ...(await promises.readdir(absolute)).map((each) => join(last, each))
+        );
+      }
+      continue;
+    }
+
+    res = res.concat(parseHTML(relative) || []);
+  }
+  return res;
+};
