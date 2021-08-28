@@ -145,7 +145,7 @@ export const checkCss = (
 };
 
 export const checkUnused = (cssFileContents: RuleSet[], $: CheerioAPI) => {
-  // console.log(inspect(cssFileContents, false, 200, true));
+  console.log(inspect(cssFileContents, false, 200, true));
   for (const ruleSet of cssFileContents) {
     ruleSet.selectors.forEach((each) => {
       if (each === "*") return;
