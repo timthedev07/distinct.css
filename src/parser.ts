@@ -152,14 +152,14 @@ export const deepCssParser = async (
 
 /**
  *
- * @param path Absolute path to HTML file
+ * @param path Relative path to HTML file
  * @returns CheerioAPI
  */
 export const parseHTML = (path: string) => {
   let fileContent: string;
 
   try {
-    fileContent = readFileSync(path).toString();
+    fileContent = readFileSync(join(process.cwd(), path)).toString();
   } catch (err) {
     console.log(ansi("Invalid path to HTML file.", RED));
     return null;
