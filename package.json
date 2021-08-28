@@ -36,6 +36,7 @@
     "@types/node": "^16.3.3",
     "@types/strip-comments": "^2.0.1",
     "@types/yargs": "^17.0.2",
+    "jest": "^27.1.0",
     "terser": "^5.7.1"
   }
 }
