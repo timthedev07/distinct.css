@@ -2,7 +2,7 @@
 
 import { join } from "path";
 import yargs from "yargs";
-import { checkDir, checkFile } from "./check";
+import { checkDir, checkFile, checkUnused } from "./check";
 import {
   ansi,
   CYAN,
@@ -102,9 +102,14 @@ const parser = yargs(process.argv.slice(2))
 
     const absoluteHTMLPath = join(process.cwd(), htmlPath);
     const HTMLData = isDirectory(absoluteHTMLPath)
-      ? deepParseHTML(absoluteHTMLPath)
+      ? await deepParseHTML(absoluteHTMLPath, recursive)
       : parseHTML(absoluteHTMLPath);
-    HTMLData;
+
+    if (!HTMLData) {
+      return;
+    }
+
+    checkUnused(cssRulesets, HTMLData);
   } else {
     const path = argv.f;
     if (!path) return console.error(INVALID_PATH);
