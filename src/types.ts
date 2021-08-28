@@ -8,6 +8,7 @@ export interface Property {
 
 export interface RuleSet {
   selectors: Array<string>;
+  ruleSetPosition?: PositionInfo;
   rules: Array<Property>;
 }
 
