@@ -11,7 +11,7 @@ import {
   INVALID_PATH,
   RED,
 } from "./constants";
-import { cssParser, deepCssParser, parseHTML } from "./parser";
+import { cssParser, deepCssParser, deepParseHTML, parseHTML } from "./parser";
 import { prompt } from "inquirer";
 import { RemoveUnusedAnswerType, RuleSet } from "./types";
 import { isDirectory } from "./utils";
@@ -101,7 +101,10 @@ const parser = yargs(process.argv.slice(2))
     }
 
     const absoluteHTMLPath = join(process.cwd(), htmlPath);
-    parseHTML(absoluteHTMLPath);
+    const HTMLData = isDirectory(absoluteHTMLPath)
+      ? deepParseHTML(absoluteHTMLPath)
+      : parseHTML(absoluteHTMLPath);
+    HTMLData;
   } else {
     const path = argv.f;
     if (!path) return console.error(INVALID_PATH);
