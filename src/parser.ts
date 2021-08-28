@@ -5,7 +5,6 @@ import { ansi, CYAN, INVALID_HTML_PATH, RED, RESET, YELLOW } from "./constants";
 import { PositionInfo, RuleSet } from "./types";
 import { CheerioAPI, load } from "cheerio";
 import { isDirectory, preProcessRawHTML } from "./utils";
-import { Element } from "domhandler";
 
 const isRule = (value: Comment | Rule | AtRule): value is Rule => {
   return value.hasOwnProperty("selectors");
