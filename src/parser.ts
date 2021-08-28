@@ -79,6 +79,7 @@ export const cssParser: (filePath: string) => Array<RuleSet> | null = (
     const declarations: Declaration[] = each.declarations;
 
     res.push({
+      ruleSetPosition: each.position,
       selectors: each.selectors,
       rules: declarations
         .filter((item) => isDeclaration(item))
