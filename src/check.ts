@@ -1,8 +1,9 @@
 import { CheerioAPI } from "cheerio";
+import { inspect } from "util";
 import { ansi, CYAN, GREEN, RED, YELLOW } from "./constants";
 import { deepCssParser } from "./parser";
 import { Property, RuleSet } from "./types";
-import { reportError } from "./utils";
+import { reportError, reportUnused } from "./utils";
 
 export const checkDir = async (
   path: string,
@@ -144,10 +145,13 @@ export const checkCss = (
 };
 
 export const checkUnused = (cssFileContents: RuleSet[], $: CheerioAPI) => {
-  for (const ruleset of cssFileContents) {
-    ruleset.selectors.forEach((each) => {
+  // console.log(inspect(cssFileContents, false, 200, true));
+  for (const ruleSet of cssFileContents) {
+    ruleSet.selectors.forEach((each) => {
+      if (each === "*") return;
       // if no such selector can be applied to any HTML elements
       if ($(each).get().length > 0) {
+        reportUnused(ruleSet);
       }
     });
   }
