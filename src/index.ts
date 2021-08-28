@@ -102,8 +102,8 @@ const parser = yargs(process.argv.slice(2))
 
     const absoluteHTMLPath = join(process.cwd(), htmlPath);
     const HTMLData = isDirectory(absoluteHTMLPath)
-      ? await deepParseHTML(absoluteHTMLPath, recursive)
-      : parseHTML(absoluteHTMLPath);
+      ? await deepParseHTML(htmlPath, recursive)
+      : parseHTML(htmlPath);
 
     if (!HTMLData) {
       return;
