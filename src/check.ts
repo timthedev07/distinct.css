@@ -209,5 +209,6 @@ export const checkCss = (
 
 export const checkUnused = (cssFileContents: RuleSet[], $: CheerioAPI) => {
   for (const ruleset of cssFileContents) {
+    ruleset;
   }
 };
