@@ -17,13 +17,12 @@ export const isDirectory = (path: string) => lstatSync(path).isDirectory();
  * So this would result in leaving only the nodes inside of the body tag in the string
  *
  * @param rawHTML
- * @returns
+ * @returns Processed HTML without all the other annoying stuff.
  */
 export const preProcessRawHTML = (rawHTML: string) => {
   let res = rawHTML;
-  res = res.replace(/<html>/gi, "");
-  res = res.replace(/<\/html>/gi, "");
-  res = res.replace(/<!DOCTYPE\s*.*>/gi, "");
+  let re = /(<html>|<\/html>|<!DOCTYPE\s*.*>)/g;
+  res = res.replace(re, "");
 
   const headTagIndex = res.indexOf("<head>");
 
