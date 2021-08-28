@@ -1,6 +1,6 @@
 import { lstatSync, readFileSync } from "fs";
 import { ansi, BOLD, YELLOW, RESET, CYAN } from "./constants";
-import { PositionInfo, Property } from "./types";
+import { PositionInfo, Property, RuleSet } from "./types";
 
 /**
  *
@@ -68,6 +68,26 @@ ${showInFile(rule.position, position.start!.column! + rule.property.length + 1)}
 ║
 ${rules.slice(1).map(each => showInFile(each.position, (each.position.start!.column! + each.property.length + 1))).join(`\n║\n║ ${"=".repeat(40)}\n║\n`)}
 ║                                                                               ═══╦═══
+╚══════════════════════════════════════════════════════════════════════════════════╝
+
+`);
+};
+
+export const reportUnused = (ruleSet: RuleSet) => {
+  const position = ruleSet.ruleSetPosition;
+
+  if (!position || !position.source) {
+    return console.error("Error in unknown file.");
+  }
+
+  // prettier-ignore
+  console.log(`
+╔══════════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ═══╩═══
+║ Unused selector:
+║
+${showInFile(position, position.start?.column || undefined)}
+║
 ╚══════════════════════════════════════════════════════════════════════════════════╝
 
 `);
