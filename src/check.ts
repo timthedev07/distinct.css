@@ -1,3 +1,4 @@
+import { CheerioAPI } from "cheerio";
 import { readFileSync } from "fs";
 import { ansi, BOLD, CYAN, GREEN, RED, RESET, YELLOW } from "./constants";
 import { deepCssParser } from "./parser";
@@ -206,7 +207,7 @@ export const checkCss = (
   });
 };
 
-export const checkUnused = (
-  _cssFileContents: RuleSet[],
-  _htmlFileContents: string[]
-) => {};
+export const checkUnused = (cssFileContents: RuleSet[], $: CheerioAPI) => {
+  for (const ruleset of cssFileContents) {
+  }
+};
