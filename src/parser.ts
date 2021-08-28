@@ -162,8 +162,9 @@ export const parseHTML = (path: string) => {
   }
 
   const $ = load(fileContent);
-  const all = $("*").get();
-  console.log(all.map((each) => each.name));
+  const html = $("html");
+
+  console.log(html.html());
 };
 
 /**
