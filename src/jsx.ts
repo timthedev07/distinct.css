@@ -19,7 +19,9 @@ export const parseJSXFile = async (
     if (!silent)
       console.log(
         ansi(
-          `Unsupported file extension. Only files ending in ${parsableFiles} are allowed.`,
+          `Unsupported file extension. Only files ending in [${parsableFiles.join(
+            ", "
+          )}] are allowed.`,
           RED
         )
       );
