@@ -4,6 +4,7 @@ import { join } from "path";
 import { ansi, RED } from "./constants";
 import { inspect } from "util";
 import { parse } from "@babel/parser";
+import type { Statement } from "@babel/types";
 
 const parsableFiles = [".js", ".jsx", ".tsx"];
 
@@ -53,3 +54,5 @@ export const parseJSXFile = async (
 
   return load("<html></html>");
 };
+
+export const searchForJSXElementReturned = (body: Statement[]) => {};
