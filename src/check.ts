@@ -152,10 +152,9 @@ export const checkCss = (
 export const checkUnused = (cssFileContents: RuleSet[], $: CheerioAPI) => {
   const unused: RuleSet[] = [];
   for (const ruleSet of cssFileContents) {
-    ruleSet.selectors.forEach((each) => {
-      if (each === "*") return;
+    ruleSet.selectors.forEach((selector) => {
       // if no such selector can be applied to any HTML elements
-      if ($(each).get().length < 1) {
+      if ($(selector).get().length < 1) {
         reportUnused(ruleSet);
         unused.push(ruleSet);
       }
