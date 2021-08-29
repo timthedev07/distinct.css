@@ -10,6 +10,12 @@
 
 A command line app for finding and removing duplicate or conflicting css rules in a given file or directory.
 
+## Simply
+
+```bash
+npx distinct.css
+```
+
 ## Installation
 
 Install globally:
