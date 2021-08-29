@@ -1,9 +1,9 @@
 import { CheerioAPI, load } from "cheerio";
 import { promises } from "fs";
 import { join } from "path";
-import { Parser } from "acorn";
-import jsx from "acorn-jsx";
 import { ansi, RED } from "./constants";
+import { inspect } from "util";
+import { parse } from "@babel/parser";
 
 const parsableFiles = [".js", ".jsx", ".tsx"];
 
@@ -39,15 +39,17 @@ export const parseJSXFile = async (
     return null;
   }
 
-  const extendedParser = Parser.extend(jsx());
-
-  const parsed = extendedParser.parse(rawJSXFileContent, {
-    ecmaVersion: "latest",
+  const {
+    program: { body },
+  } = parse(rawJSXFileContent, {
     sourceType: "module",
     allowImportExportEverywhere: true,
+    plugins: ["jsx", "typescript"],
   });
 
-  if (!silent) console.log(parsed);
+  if (!silent) {
+    console.log("body: ", inspect(body, true, null, true));
+  }
 
   return load("<html></html>");
 };
