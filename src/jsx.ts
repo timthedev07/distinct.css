@@ -3,6 +3,7 @@ import { promises } from "fs";
 import { join } from "path";
 import { Parser } from "acorn";
 import jsx from "acorn-jsx";
+import { ansi, RED } from "./constants";
 
 const parsableFiles = [".js", ".jsx", ".tsx"];
 parsableFiles;
@@ -10,9 +11,13 @@ parsableFiles;
 export const parseJSXFile = async (
   relativePath: string
 ): Promise<CheerioAPI | null> => {
-  if (!relativePath.endsWith(".js")) {
-    // incorrect file extension
+  for (const fileExtension of parsableFiles) {
+    if (!relativePath.endsWith(fileExtension)) {
+      console.log(ansi("Unsupported file extension[.js, .jsx, .tsx]", RED));
+      return null;
+    }
   }
+
   const absolute = join(process.cwd(), relativePath);
 
   let rawJSXFileContent: string = "";
@@ -20,11 +25,9 @@ export const parseJSXFile = async (
   try {
     rawJSXFileContent = (await promises.readFile(absolute)).toString();
   } catch (err) {
+    console.log(ansi("Invalid path to JSX/TSX.", RED));
     return null;
   }
-
-  const re = /d/g;
-  re;
 
   const extendedParser = Parser.extend(jsx());
 
