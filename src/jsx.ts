@@ -47,7 +47,7 @@ export const parseJSXFile = async (
     allowImportExportEverywhere: true,
   });
 
-  console.log(parsed);
+  if (!silent) console.log(parsed);
 
   return load("<html></html>");
 };
