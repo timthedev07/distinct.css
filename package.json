@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/timthedev07/distinct.css#readme",
   "dependencies": {
+    "@babel/parser": "^7.15.3",
     "acorn": "^8.4.1",
     "acorn-jsx": "^5.3.2",
     "cheerio": "^1.0.0-rc.10",
