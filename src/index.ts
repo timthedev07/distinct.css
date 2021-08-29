@@ -62,7 +62,7 @@ const parser = yargs(process.argv.slice(2))
  * @param cssPath Relative path to CSS file/directory containing CSS files
  * @param htmlPath Relative path to HTML file/directory containing HTML files
  * @param recursive
- * @returns
+ * @returns Unused css rule sets
  */
 export const handleUFlagResponse = async (
   cssPath: string,
@@ -77,12 +77,13 @@ export const handleUFlagResponse = async (
     cssRulesets = isDirectory(absoluteCssPath)
       ? await deepCssParser(cssPath, recursive)
       : cssParser(cssPath);
-    if (!cssRulesets)
-      return console.log(
-        ansi("No rule sets are present in the given path.", CYAN)
-      );
+    if (!cssRulesets) {
+      console.log(ansi("No rule sets are present in the given path.", CYAN));
+      return [];
+    }
   } catch (err) {
-    return console.log(ansi("Invalid Path", RED));
+    console.log(ansi("Invalid Path", RED));
+    return [];
   }
 
   const absoluteHTMLPath = join(process.cwd(), htmlPath);
@@ -91,10 +92,10 @@ export const handleUFlagResponse = async (
     : parseHTML(htmlPath);
 
   if (!HTMLData) {
-    return;
+    return [];
   }
 
-  checkUnused(cssRulesets, HTMLData);
+  return checkUnused(cssRulesets, HTMLData);
 };
 
 (async () => {
