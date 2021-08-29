@@ -23,8 +23,4 @@ describe("Unused CSS selectors detection", () => {
     // expected to have no unused css
     expect(result).toHaveLength(0);
   });
-
-  test("exit", () => {
-    expect(1 < 2).toEqual(false);
-  });
 });
