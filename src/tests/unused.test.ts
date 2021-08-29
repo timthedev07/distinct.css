@@ -35,5 +35,16 @@ describe("Unused CSS selectors detection", () => {
       // expected to have no unused css
       expect(result).toHaveLength(0);
     });
+
+    test("recognizes element.class#id selectors", async () => {
+      const result = await handleUFlagResponse(
+        "/test-data/unused-css-detection/styles/3.css",
+        "/test-data/unused-css-detection/pages/3.html",
+        false
+      );
+
+      // expected to have no unused css
+      expect(result).toHaveLength(0);
+    });
   });
 });
