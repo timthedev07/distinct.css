@@ -57,6 +57,13 @@ const parser = yargs(process.argv.slice(2))
   .help("h")
   .alias("h", "help");
 
+/**
+ *
+ * @param cssPath Relative path to CSS file/directory containing CSS files
+ * @param htmlPath Relative path to HTML file/directory containing HTML files
+ * @param recursive
+ * @returns
+ */
 const handleUFlagResponse = async (
   cssPath: string,
   htmlPath: string,
@@ -99,12 +106,12 @@ const handleUFlagResponse = async (
         {
           name: "cssPath",
           type: "input",
-          message: "Path to CSS file(s):",
+          message: "Path to CSS:",
         },
         {
           name: "htmlPath",
           type: "input",
-          message: "Path to HTML file(s):",
+          message: "Path to HTML:",
         },
         {
           name: "recursive",
