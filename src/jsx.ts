@@ -55,4 +55,12 @@ export const parseJSXFile = async (
   return load("<html></html>");
 };
 
-export const searchForJSXElementReturned = (body: Statement[]) => {};
+export const searchForJSXReturnedFromFC = (_body: Statement[]) => {
+  /**
+   * Initial starting points:
+   *
+   * - ExportNamedDeclaration -> export Component = () => <React /> || export function Component { return <React />; }
+   * - VariableDeclaration -> const Component = () => <React />
+   * - FunctionDeclaration -> function Component { return <React />; }
+   */
+};
