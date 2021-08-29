@@ -1,25 +1,11 @@
 import { CheerioAPI, load } from "cheerio";
 import { promises } from "fs";
 import { join } from "path";
-import { parse as parseJSX } from "@babel/parser";
+import { Parser } from "acorn";
+import jsx from "acorn-jsx";
 
 const parsableFiles = [".js", ".jsx", ".tsx"];
 parsableFiles;
-
-/**
- * @param content JSX content
- * @returns index
- */
-export const findJSXStartingPosition = (content: string): number => {
-  const re = /d/g;
-  re;
-
-  const ast = parseJSX(content);
-
-  console.log(ast);
-
-  return 0;
-};
 
 export const parseJSXFile = async (
   relativePath: string
@@ -36,6 +22,19 @@ export const parseJSXFile = async (
   } catch (err) {
     return null;
   }
+
+  const re = /d/g;
+  re;
+
+  const extendedParser = Parser.extend(jsx());
+
+  const parsed = extendedParser.parse(rawJSXFileContent, {
+    ecmaVersion: "latest",
+    sourceType: "module",
+    allowImportExportEverywhere: true,
+  });
+
+  console.log(parsed);
 
   return load("<html></html>");
 };
