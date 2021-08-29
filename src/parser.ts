@@ -165,7 +165,7 @@ export const parseHTML = (path: string) => {
     return null;
   }
 
-  const $ = load(fileContent, null, false);
+  const $ = load(fileContent);
 
   return $;
 };
@@ -216,5 +216,5 @@ export const deepParseHTML = async (
     rawHTMLContents += currentRawHTML;
   }
 
-  return load(rawHTMLContents, null, false);
+  return load(rawHTMLContents);
 };
