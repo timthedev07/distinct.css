@@ -1,5 +1,4 @@
 import { CheerioAPI } from "cheerio";
-import { inspect } from "util";
 import { ansi, CYAN, GREEN, RED, YELLOW } from "./constants";
 import { deepCssParser } from "./parser";
 import { Property, RuleSet } from "./types";
@@ -144,15 +143,23 @@ export const checkCss = (
   });
 };
 
+/**
+ *
+ * @param cssFileContents CSS rule sets
+ * @param $ Cheerio API object
+ * @returns An array of unused rule sets
+ */
 export const checkUnused = (cssFileContents: RuleSet[], $: CheerioAPI) => {
-  console.log(inspect(cssFileContents, false, 200, true));
+  const unused: RuleSet[] = [];
   for (const ruleSet of cssFileContents) {
     ruleSet.selectors.forEach((each) => {
       if (each === "*") return;
       // if no such selector can be applied to any HTML elements
       if ($(each).get().length > 0) {
         reportUnused(ruleSet);
+        unused.push(ruleSet);
       }
     });
   }
+  return unused;
 };
