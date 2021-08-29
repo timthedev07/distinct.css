@@ -11,11 +11,13 @@ parsableFiles;
 export const parseJSXFile = async (
   relativePath: string
 ): Promise<CheerioAPI | null> => {
-  for (const fileExtension of parsableFiles) {
-    if (!relativePath.endsWith(fileExtension)) {
-      console.log(ansi("Unsupported file extension[.js, .jsx, .tsx]", RED));
-      return null;
-    }
+  const supportedFileExtension = parsableFiles.some((fileExtension) =>
+    relativePath.endsWith(fileExtension)
+  );
+
+  if (!supportedFileExtension) {
+    console.log(ansi("Unsupported file extension[.js, .jsx, .tsx]", RED));
+    return null;
   }
 
   const absolute = join(process.cwd(), relativePath);
