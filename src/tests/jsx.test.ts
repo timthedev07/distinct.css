@@ -6,7 +6,7 @@ const REJECTED = BASE_DIR + "/rejected";
 
 describe("Raw JSX file parsing", () => {
   test("successfully parses JSX", async () => {
-    const parsed0 = await parseJSXFile(BASE_DIR + "/hello.jsx", true);
+    const parsed0 = await parseJSXFile(BASE_DIR + "/hello.jsx", false);
     const parsed1 = await parseJSXFile(BASE_DIR + "/hello.js", true);
     const parsed2 = await parseJSXFile(BASE_DIR + "/hello.tsx", true);
     expect(parsed0).toBeTruthy();
