@@ -64,7 +64,7 @@ const parser = yargs(process.argv.slice(2))
  * @param recursive
  * @returns
  */
-const handleUFlagResponse = async (
+export const handleUFlagResponse = async (
   cssPath: string,
   htmlPath: string,
   recursive: boolean
