@@ -49,5 +49,14 @@ describe("Unused CSS selectors detection", () => {
       );
       expect(result).toHaveLength(0);
     });
+
+    test("recognizes attributes", async () => {
+      const result = await handleUFlagResponse(
+        "/test-data/unused-css-detection/styles/5.css",
+        "/test-data/unused-css-detection/pages/5.html",
+        false
+      );
+      expect(result).toHaveLength(0);
+    });
   });
 });
