@@ -155,7 +155,7 @@ export const checkUnused = (cssFileContents: RuleSet[], $: CheerioAPI) => {
     ruleSet.selectors.forEach((each) => {
       if (each === "*") return;
       // if no such selector can be applied to any HTML elements
-      if ($(each).get().length > 0) {
+      if ($(each).get().length < 1) {
         reportUnused(ruleSet);
         unused.push(ruleSet);
       }
