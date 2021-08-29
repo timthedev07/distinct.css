@@ -2,19 +2,13 @@
 
 import { join } from "path";
 import yargs from "yargs";
-import { checkDir, checkFile, checkUnused } from "./check";
-import {
-  ansi,
-  CYAN,
-  INVALID_CSS_PATH,
-  INVALID_HTML_PATH,
-  INVALID_PATH,
-  RED,
-} from "./constants";
-import { cssParser, deepCssParser, deepParseHTML, parseHTML } from "./parser";
+import { checkDir, checkFile } from "./check";
+import { INVALID_CSS_PATH, INVALID_HTML_PATH, INVALID_PATH } from "./constants";
+import { cssParser } from "./parser";
 import { prompt } from "inquirer";
-import { RemoveUnusedAnswerType, RuleSet } from "./types";
+import { RemoveUnusedAnswerType } from "./types";
 import { isDirectory } from "./utils";
+import { handleUFlagResponse } from "./handlers";
 
 const parser = yargs(process.argv.slice(2))
   .options({
@@ -56,47 +50,6 @@ const parser = yargs(process.argv.slice(2))
   .alias("v", "version")
   .help("h")
   .alias("h", "help");
-
-/**
- *
- * @param cssPath Relative path to CSS file/directory containing CSS files
- * @param htmlPath Relative path to HTML file/directory containing HTML files
- * @param recursive
- * @returns Unused css rule sets
- */
-export const handleUFlagResponse = async (
-  cssPath: string,
-  htmlPath: string,
-  recursive: boolean
-) => {
-  const absoluteCssPath = join(process.cwd(), cssPath);
-
-  let cssRulesets: RuleSet[] | null = null;
-
-  try {
-    cssRulesets = isDirectory(absoluteCssPath)
-      ? await deepCssParser(cssPath, recursive)
-      : cssParser(cssPath);
-    if (!cssRulesets) {
-      console.log(ansi("No rule sets are present in the given path.", CYAN));
-      return [];
-    }
-  } catch (err) {
-    console.log(ansi("Invalid Path", RED));
-    return [];
-  }
-
-  const absoluteHTMLPath = join(process.cwd(), htmlPath);
-  const HTMLData = isDirectory(absoluteHTMLPath)
-    ? await deepParseHTML(htmlPath, recursive)
-    : parseHTML(htmlPath);
-
-  if (!HTMLData) {
-    return [];
-  }
-
-  return checkUnused(cssRulesets, HTMLData);
-};
 
 (async () => {
   const argv = await parser.argv;
