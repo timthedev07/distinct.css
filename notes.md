@@ -46,3 +46,36 @@ export const Component: React.FC<Props> = ({...}) => {
 
 
 ```
+
+Where are the JSX elements?
+
+```bash
+
+                             ClassDeclaration
+
+                                    ▲
+                                    │
+                                    │
+                                    │
+              VariableDeclaration   │       FunctionDeclaration
+                      ▲             │                ▲
+                      │             │                │
+                      │             │                │
+                      │             │                │
+                      │             │                │
+                      └─── ExportNamedDeclaration ───┘
+                                    ▲
+                                    │
+                                    │
+                                    │
+      FunctionDeclaration  ◄────── Body ───────►  ExportDefaultDeclaration
+                                    │ │                                │
+                                    │ │                                └───────┐
+                                    │ │                                        │
+                                    │ │                                        └──────►  ClassDeclaration
+                                    │ │
+                               ┌────┘ └────┐
+                               │           │
+ VariableDeclaration  ◄────────┘           └───────►  ClassDeclaration
+
+```
