@@ -1,3 +1,9 @@
-export const HelloWorld = () => {
-  return <div>Hello world</div>;
-};
+class Component extends React.Component {
+  constructor() {
+    super(props);
+  }
+
+  render() {
+    return <div>Hello World</div>;
+  }
+}
