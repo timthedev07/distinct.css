@@ -48,6 +48,15 @@ const readFile = (path: string) => {
 export const cssParser: (filePath: string) => Array<RuleSet> | null = (
   filePath: string
 ) => {
+  if (!filePath.endsWith(".css")) {
+    console.log(
+      ansi(
+        "Please provide file(s) ending in .css. `distinct.css -h` for more information.",
+        YELLOW
+      )
+    );
+    return null;
+  }
   const input = readFile(filePath);
 
   const source = join(process.cwd(), filePath);
@@ -139,9 +148,12 @@ export const deepCssParser = async (
     if (isDirectory(absolute)) {
       if (recursive) {
         queue.push(
-          ...(await promises.readdir(absolute)).map((each) => join(last, each))
+          ...(await promises.readdir(absolute))
+            .filter((fileName) => fileName.endsWith(".html"))
+            .map((each) => join(last, each))
         );
       }
+      // skip because the code below parses a file
       continue;
     }
 
@@ -157,6 +169,16 @@ export const deepCssParser = async (
  */
 export const parseHTML = (path: string) => {
   let fileContent: string;
+
+  if (!path.endsWith(".html")) {
+    console.log(
+      ansi(
+        "Please provide file(s) ending in .html. `distinct.css -h` for more information.",
+        YELLOW
+      )
+    );
+    return null;
+  }
 
   try {
     fileContent = readFileSync(join(process.cwd(), path)).toString();
@@ -206,7 +228,9 @@ export const deepParseHTML = async (
     if (isDirectory(absolute)) {
       if (recursive) {
         queue.push(
-          ...(await promises.readdir(absolute)).map((each) => join(last, each))
+          ...(await promises.readdir(absolute))
+            .filter((fileName) => fileName.endsWith(".html"))
+            .map((each) => join(last, each))
         );
       }
       continue;
