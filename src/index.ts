@@ -27,8 +27,8 @@ const parser = yargs(process.argv.slice(2))
     "recursively searches for duplicate css rules in the css directory"
   )
   .example(
-    "$0 -c -f iHaveConflicts.css",
-    "searches for duplicate and conflicting css rules in iHaveConflicts.css"
+    "$0 -c -f conflicts.css",
+    "searches for duplicate and conflicting css rules in conflicts.css"
   )
   .example(
     "$0 -u",
