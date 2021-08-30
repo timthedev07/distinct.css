@@ -20,15 +20,19 @@ const parser = yargs(process.argv.slice(2))
   .usage("Usage: $0 -f [path]")
   .example(
     "$0 -f button.css",
-    "- searches for duplicate css rules in file button.css"
+    "searches for duplicate css rules in file button.css"
   )
   .example(
     "$0 -r -f css/",
-    "- recursively searches for duplicate css rules in the css directory"
+    "recursively searches for duplicate css rules in the css directory"
   )
   .example(
     "$0 -c -f iHaveConflicts.css",
-    "- searches for duplicate and conflicting css rules in iHaveConflicts.css"
+    "searches for duplicate and conflicting css rules in iHaveConflicts.css"
+  )
+  .example(
+    "$0 -u",
+    "detect unused css, more information will be prompt when command executes"
   )
   .alias("f", "file")
   .alias("f", "d")
