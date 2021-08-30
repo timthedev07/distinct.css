@@ -7,6 +7,13 @@ import { parse } from "@babel/parser";
 import type { Statement } from "@babel/types";
 
 const parsableFiles = [".js", ".jsx", ".tsx"];
+const possibleReactComponents = new Set([
+  "ExportDefaultDeclaration",
+  "VariableDeclaration",
+  "FunctionDeclaration",
+  "ExportDefaultDeclaration",
+  "ClassDeclaration",
+]);
 
 export const parseJSXFile = async (
   relativePath: string,
@@ -55,12 +62,21 @@ export const parseJSXFile = async (
   return load("<html></html>");
 };
 
-export const searchForJSXReturnedFromFC = (_body: Statement[]) => {
+// const determineJSXElementInFunction = (node: Statement) => {};
+
+export const searchForJSXElement = (body: Statement[]) => {
   /**
-   * Initial starting points:
+   * Map
    *
    * - ExportNamedDeclaration -> export Component = () => <React /> || export function Component { return <React />; }
    * - VariableDeclaration -> const Component = () => <React />
    * - FunctionDeclaration -> function Component { return <React />; }
+   * - ExportDefaultDeclaration -> export default Component = () => <React /> || export default function Component() { return <React /> }
    */
+
+  // the starting point must be at the root level of the body.
+  for (const node of body) {
+    if (possibleReactComponents.has(node.type)) {
+    }
+  }
 };
