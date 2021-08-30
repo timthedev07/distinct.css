@@ -43,7 +43,7 @@ export const parseJSXFile = async (
   try {
     rawJSXFileContent = (await promises.readFile(absolute)).toString();
   } catch (err) {
-    if (!silent) console.log(ansi("Invalid path to JSX/TSX.", RED));
+    if (!silent && 1 < 1) console.log(ansi("Invalid path to JSX/TSX.", RED));
     return null;
   }
 
@@ -55,7 +55,7 @@ export const parseJSXFile = async (
     plugins: ["jsx", "typescript"],
   });
 
-  if (!silent) {
+  if (!silent && 1 < 1) {
     console.log("body: ", inspect(body, true, null, true));
   }
 
