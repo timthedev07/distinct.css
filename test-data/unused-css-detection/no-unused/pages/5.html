@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/5.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div smart>
+      I'm smart.
+      <pre>
+      [smart]
+      </pre>
+    </div>
+    <div age="105">
+      I'm 105 years old.
+      <pre>
+      [age=105]
+      </pre>
+    </div>
+    <div food="pasta sushi burrito">
+      I like burrito
+      <pre>
+        [food~=burrito]
+      </pre>
+    </div>
+    <div language="zh-simplified">
+      The language i speak either equals or starts with 'zh'
+      <pre>
+        [language|=zh]
+      </pre>
+    </div>
+    <div url="https://www.youtube.com">
+      I am a secure link because:
+      <pre>
+        [url^=https]
+      </pre>
+    </div>
+    <div name="json">
+      I am Json, and my name ends in -son.
+      <pre>
+        [name$=son]
+      </pre>
+    </div>
+    <div company="facezongoogappflix">
+      My company is facezongoogappflix, it has a 'goog' in it.
+      <pre>
+        [company*=goog]
+      </pre>
+    </div>
+  </body>
+</html>

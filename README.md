@@ -9,6 +9,12 @@
 
 A command line app for finding and removing duplicate or conflicting css rules in a given file or directory.
 
+## Simply
+
+```bash
+npx distinct.css
+```
+
 ## Installation
 
 Install globally:
@@ -39,14 +45,23 @@ Options:
   -c, --showConflict           Show conflicting rules [boolean] [default: false]
   -r, --recursive              Recursively search in a directory
                                                        [boolean] [default: true]
+  -u, --detectUnused           Check for unused css rules. Note that if this
+                               flag is passed, all the other ones would be
+                               ignored since it behaves differently.
+                                                      [boolean] [default: false]
   -h, --help                   Show help                               [boolean]
   -v, --version                Show version number                     [boolean]
 
 Examples:
-  distinct.css -f button.css             - searches for duplicate css rules in file
+  distinct.css -f button.css         searches for duplicate css rules in file
                                      button.css
-  distinct.css -rf css/                - recursively searches for duplicate css
+
+  distinct.css -rf css/              recursively searches for duplicate css
                                      rules in the css directory
-  distinct.css -cf iHaveConflicts.css  - searches for duplicate and conflicting
-                                     css rules in iHaveConflicts.css
+
+  distinct.css -cf conflicts.css     searches for duplicate and conflicting
+                                     css rules in conflicts.css
+
+  index.ts -u                        detect unused css, more information will be
+                                     prompt when command executes
 ```

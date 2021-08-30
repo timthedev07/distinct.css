@@ -8,6 +8,7 @@ export interface Property {
 
 export interface RuleSet {
   selectors: Array<string>;
+  ruleSetPosition?: PositionInfo;
   rules: Array<Property>;
 }
 
@@ -16,4 +17,10 @@ export interface PositionInfo {
   end?: Position | undefined;
   source?: string | undefined;
   content?: string | undefined;
+}
+
+export interface RemoveUnusedAnswerType {
+  htmlPath: string;
+  cssPath: string;
+  recursive: boolean;
 }

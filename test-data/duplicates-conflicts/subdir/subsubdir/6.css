@@ -1,0 +1,18 @@
+div {
+  background-repeat: repeat-x;
+  background-repeat: repeat-y;
+  background-repeat: round;
+}
+
+.some-class.another-class.yet-another-class {
+  background-color: blue;
+}
+
+/* unused */
+ol.a-list .an-item {
+  font-family: "Courier New", Courier, monospace;
+}
+
+ol.a-list .an-item {
+  font-family: "Courier New", Courier, monospace;
+}
