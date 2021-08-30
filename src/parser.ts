@@ -149,7 +149,7 @@ export const deepCssParser = async (
       if (recursive) {
         queue.push(
           ...(await promises.readdir(absolute))
-            .filter((fileName) => fileName.endsWith(".html"))
+            .filter((fileName) => fileName.endsWith(".css"))
             .map((each) => join(last, each))
         );
       }
