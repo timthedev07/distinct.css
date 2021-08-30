@@ -15,7 +15,7 @@ const parser = yargs(process.argv.slice(2))
     f: { type: "string", default: "" },
     c: { type: "boolean", default: false },
     r: { type: "boolean", default: true },
-    u: { type: "boolean", default: true },
+    u: { type: "boolean", default: false },
   })
   .usage("Usage: $0 -f [path]")
   .example(
